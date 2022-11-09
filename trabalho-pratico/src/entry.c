@@ -253,7 +253,7 @@ int main(int argc, char const *argv[])
 		printf("%s", line);
 
 		//process command
-		sprintf(command,"%s%d%s","Results/command",i,"_output.txt");
+		sprintf(command,"%s%d%s","Resultados/command",i,"_output.txt");
 		
 		FILE *output_file_pointer = fopen(command,"w+");
 
