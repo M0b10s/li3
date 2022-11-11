@@ -15,9 +15,32 @@ typedef struct data_user{
 	enum pay_method pay_method;
 	enum account_status account_status;
 	int idade;
+	int num_viagens;
+	double distancia_viajada;
+	double total_avaliacao;
+	double total_gasto;
 	
 }*DATA_USER;
 
+//===============================================Set's=====================================================
+
+void set_increment_num_viagens(DATA_USER user){
+	
+	if(user) user->num_viagens = user->num_viagens + 1;
+
+}
+
+void set_distancia_viajada(DATA_USER user,double distancia){
+	user->distancia_viajada += distancia;
+}
+
+void set_total_avaliacao(DATA_USER user,double avaliacao){
+	user->total_avaliacao += avaliacao;
+}
+
+void set_total_gasto(DATA_USER user,double gasto){
+	user->total_gasto += gasto;
+}
 
 //===============================================Get's=====================================================
 
@@ -73,29 +96,84 @@ int get_idade(DATA_USER user){
 
 }
 
+int get_num_viagens(DATA_USER user){
+
+	return user->num_viagens;
+
+}
+
+double get_distancia_viajada(DATA_USER user){
+
+	return user->distancia_viajada;
+
+}
+
+double get_total_avaliacao(DATA_USER user){
+
+	return user->total_avaliacao;
+
+}
+
+double get_total_gasto(DATA_USER user){
+
+	return user->total_gasto;
+
+}
 
 //===============================================END Get's=====================================================
-
-// DATA_USER clone_user(DATA_USER user){
-
-// 	DATA_USER clone = malloc(sizeof(struct data_user));
-
-// 	clone->username = strdup(user->username);
-// 	clone->name = strdup(user->name);
-// 	clone->gender = user->gender;
-// 	clone->birth_date = user->birth_date;
-// 	clone->account_creation = user->account_creation;
-// 	clone->pay_method = user->pay_method;
-// 	clone->account_status = user->account_status;
-
-// 	return clone;
-// }
 
 void free_user(DATA_USER user){
 
 	free(user->username);
 	free(user->name);
 	free(user);
+
+}
+
+void print_user(DATA_USER user){
+
+	if(user){
+			printf("\n");
+			printf("username: %s\n",user->username);
+			printf("name: %s\n",user->name);
+        	printf("gender: %d\n",get_gender_user(user));
+        	printf("birth_date: %d/%d/%d\n",user->birth_date.tm_mday,user->birth_date.tm_mon,user->birth_date.tm_year+1900);
+        	printf("account_creation: %d/%d/%d\n",user->account_creation.tm_mday,user->account_creation.tm_mon,user->account_creation.tm_year+1900);
+        	printf("pay_method: %d\n",get_pay_method_user(user));
+        	printf("account_status: %d\n",get_account_status_user(user));
+        	printf("idade: %d\n",user->idade);
+        	printf("num_viagens: %d\n",user->num_viagens);
+        	printf("distancia_viajada: %lf\n",user->distancia_viajada);
+        	printf("total_avaliacao: %lf\n",user->total_avaliacao);
+        	printf("total_gasto: %lf\n",user->total_gasto);
+       		printf("\n");
+    }
+
+}
+
+DATA_USER clone_user(DATA_USER user){
+	
+	if(user == NULL) return NULL;
+
+	DATA_USER clone = malloc(sizeof(struct data_user));
+	clone->username = strdup(user->username);
+	clone->name = strdup(user->name);
+	clone->gender = user->gender;
+	clone->birth_date.tm_mday = user->birth_date.tm_mday;
+	clone->birth_date.tm_mon = user->birth_date.tm_mon;
+	clone->birth_date.tm_year = user->birth_date.tm_year;
+	clone->account_creation.tm_mday = user->account_creation.tm_mday;
+	clone->account_creation.tm_mon = user->account_creation.tm_mon;
+	clone->account_creation.tm_year = user->account_creation.tm_year;
+	clone->pay_method = user->pay_method;
+	clone->account_status = user->account_status;
+	clone->idade = user->idade;
+	clone->num_viagens = user->num_viagens;
+	clone->distancia_viajada = user->distancia_viajada;
+	clone->total_avaliacao = user->total_avaliacao;
+	clone->total_gasto = user->total_gasto;
+
+	return clone;
 
 }
 
@@ -188,33 +266,20 @@ DATA_USER create_user(char *users_line){
 
 		}
 
-			// printf("\n");
-			// printf("username: %s\n",user->username);
-			// printf("name: %s\n",user->name);
-   //      	printf("gender: %d\n",get_gender_user(user));
-   //      	printf("birth_date: %d/%d/%d\n",user->birth_date.tm_mday,user->birth_date.tm_mon,user->birth_date.tm_year+1900);
-   //      	printf("account_creation: %d/%d/%d\n",user->account_creation.tm_mday,user->account_creation.tm_mon,user->account_creation.tm_year+1900);
-   //      	printf("pay_method: %d\n",get_pay_method_user(user));
-   //      	printf("account_status: %d\n",get_account_status_user(user));
-   //      	printf("flag: %d\n",flag);
 			
 			if(flag == 1 || i<6){
 				printf("ERROR IN USER DATA!!!\n");
 				user = NULL;
 			}
-
-			//AGE
 			
+			// AGE CALCULATION
+
 			time_t t = time(NULL);
 			struct tm tm = *localtime(&t);
 			int idade = tm.tm_year - user->birth_date.tm_year;
 			if (tm.tm_mon < user->birth_date.tm_mon || (tm.tm_mon == user->birth_date.tm_mon && tm.tm_mday < user->birth_date.tm_mday))
 				idade--;
 			user->idade = idade;
-
-
-        	// printf("idade: %d\n",get_idade(user));
-        	// printf("\n");
 
 
 		free(token);
@@ -231,12 +296,11 @@ void load_users_to_DB(GHashTable *DB_users,FILE *users_file_pointer){
 	char *users_line = NULL;
 	size_t users_line_size = 0;
 	ssize_t users_line_size_read;
-	char *aux=NULL;
 
 
  	DATA_USER user = NULL;
 
- 	printf("==================================> Loading users to DB...\n\n");
+ 	printf("\n==================================> Loading users to DB...\n\n");
 
 	while((users_line_size_read = getline(&users_line,&users_line_size,users_file_pointer)) != -1){
 
@@ -244,14 +308,15 @@ void load_users_to_DB(GHashTable *DB_users,FILE *users_file_pointer){
 		user = create_user(users_line);
 
 		if(user){
+			char *aux=NULL;
 			aux = get_username(user);
-			g_hash_table_insert(DB_users,aux,user);
+			g_hash_table_insert(DB_users,strdup(aux),user);
 			free(aux);
 		}
  
 	}
 	
-	printf("\n==================================> Users loaded to DB\n\n\n");
+	printf("\n==================================> Users loaded to DB ✅\n\n\n");
 
 
 	free(users_line);

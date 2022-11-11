@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <glib.h>
+#include "users.h"
+#include "drivers.h"
 
 typedef struct data_rides *DATA_RIDES;
 
@@ -21,8 +23,8 @@ double get_tip_rides(DATA_RIDES ride);
 char *get_comment_rides(DATA_RIDES ride);
 
 void free_rides(DATA_RIDES ride);
-DATA_RIDES create_rides(char *rides_line);
-void load_rides_to_DB(GHashTable *DB_rides,FILE *rides_file_pointer);
+DATA_RIDES create_rides(char *rides_line,GHashTable *DB_users, GHashTable *DB_drivers);
+void load_rides_to_DB(GHashTable *DB_rides,FILE *rides_file_pointer, GHashTable *DB_users, GHashTable *DB_drivers);
 
 
 #endif

@@ -17,10 +17,24 @@ typedef struct data_driver{
 	enum city city;
 	struct tm account_creation;
 	enum account_status account_status;
+	int age;
+	int num_viagens;
+	int avaliacao_total;
+
 
 
 }*DATA_DRIVER;
 
+
+//===============================================Set's=====================================================
+
+void set_increment_num_viagens_driver(DATA_DRIVER driver){
+	driver->num_viagens = driver->num_viagens + 1;
+}
+
+void set_avaliacao_total(DATA_DRIVER driver,int avaliacao){
+	driver->avaliacao_total += avaliacao;
+}
 
 //===============================================Get's=====================================================
 
@@ -76,6 +90,12 @@ int get_account_status_driver(DATA_DRIVER driver){
 
 }
 
+int get_age_driver(DATA_DRIVER driver){
+
+	return driver->age;
+
+}
+
 //===============================================END Get's=====================================================
 
 
@@ -85,6 +105,47 @@ void free_driver(DATA_DRIVER driver){
 	free(driver->license_plate);
 	free(driver);
 
+}
+
+void print_driver(DATA_DRIVER driver){
+
+	printf("\n");
+	printf("\n");
+	printf("id : %d\n",driver->id);
+	printf("name : %s\n",driver->name);
+	printf("birth_day : %d/%d/%d\n",driver->birth_day.tm_mday,driver->birth_day.tm_mon,driver->birth_day.tm_year+1900);
+	printf("gender: %d\n",driver->gender);
+	printf("car_class : %d\n",driver->car_class);
+	printf("license_plate : %s\n",driver->license_plate);
+	printf("city : %d\n",driver->city);
+	printf("account_creation : %d/%d/%d\n",driver->account_creation.tm_mday,driver->account_creation.tm_mon,driver->account_creation.tm_year+1900);
+	printf("account_status : %d\n",driver->account_status);
+	printf("age : %d\n",driver->age);
+	printf("num_viagens : %d\n",driver->num_viagens);
+	printf("avaliacao_total : %d\n",driver->avaliacao_total);
+	printf("\n");
+
+}
+
+
+DATA_DRIVER clone_driver(DATA_DRIVER driver){
+		
+	DATA_DRIVER clone = malloc(sizeof(struct data_driver));
+
+	clone->id = driver->id;
+	clone->name = strdup(driver->name);
+	clone->birth_day = driver->birth_day;
+	clone->gender = driver->gender;
+	clone->car_class = driver->car_class;
+	clone->license_plate = strdup(driver->license_plate);
+	clone->city = driver->city;
+	clone->account_creation = driver->account_creation;
+	clone->account_status = driver->account_status;
+	clone->age = driver->age;
+	clone->num_viagens = driver->num_viagens;
+	clone->avaliacao_total = driver->avaliacao_total;
+
+	return clone;
 }
 
 DATA_DRIVER create_driver(char *drivers_line){
@@ -204,24 +265,22 @@ DATA_DRIVER create_driver(char *drivers_line){
 
 		}
 
-			// printf("\n");
-			// printf("id : %d\n",driver->id);
-			// printf("name : %s\n",driver->name);
-			// printf("birth_day : %d/%d/%d\n",driver->birth_day.tm_mday,driver->birth_day.tm_mon,driver->birth_day.tm_year+1900);
-			// printf("gender: %d\n",driver->gender);
-			// printf("car_class : %d\n",driver->car_class);
-			// printf("license_plate : %s\n",driver->license_plate);
-			// printf("city : %d\n",driver->city);
-			// printf("account_creation : %d/%d/%d\n",driver->account_creation.tm_mday,driver->account_creation.tm_mon,driver->account_creation.tm_year+1900);
-			// printf("account_status : %d\n",driver->account_status);
-			// printf("FLAG : %d\n",flag);
-			
+
 			if(flag == 1 || i<9){
 				printf("ERROR IN DRIVER DATA!!!\n");
 				driver = NULL;
 			}
         	
-        	// printf("\n");
+			// AGE CALCULATION
+			time_t t = time(NULL);
+			struct tm tm = *localtime(&t);
+			int age = tm.tm_year - driver->birth_day.tm_year;
+			if (tm.tm_mon < driver->birth_day.tm_mon || (tm.tm_mon == driver->birth_day.tm_mon && tm.tm_mday < driver->birth_day.tm_mday))
+				age--;
+			driver->age = age;
+
+			driver->num_viagens = 0;
+			driver->avaliacao_total = 0;
 
 
 		free(token);
@@ -239,22 +298,22 @@ void load_drivers_to_DB(GHashTable *DB_drivers,FILE *drivers_file_pointer){
 	ssize_t driver_line_size_read;
 
 	DATA_DRIVER driver = NULL;
-	guint id;
+	gint id;
 
-	printf("==================================> Loading drivers to DB...\n\n");
+	printf("\n==================================> Loading drivers to DB...\n\n");
 
 	while((driver_line_size_read = getline(&driver_line,&driver_line_size,drivers_file_pointer)) != -1){
 
 		driver = create_driver(driver_line);
 
 		if(driver){
-			id = get_id_driver(driver)+1;
-			g_hash_table_insert(DB_drivers,&id,driver);
+			id = get_id_driver(driver);
+			g_hash_table_insert(DB_drivers,GINT_TO_POINTER(id),driver);
 		}
  
 	}
 	
-	printf("\n==================================> Drivers loaded to DB\n\n\n");
+	printf("\n==================================> Drivers loaded to DB ✅\n\n\n");
 
 	free(driver_line);
 

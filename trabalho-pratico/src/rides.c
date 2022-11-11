@@ -92,7 +92,8 @@ void free_rides(DATA_RIDES ride){
 
 }
 
-DATA_RIDES create_rides(char *rides_line){
+DATA_RIDES create_rides(char *rides_line,GHashTable *users, GHashTable *drivers){
+
 
 	DATA_RIDES ride = malloc(sizeof(struct data_rides));
 
@@ -125,13 +126,37 @@ DATA_RIDES create_rides(char *rides_line){
 			case 2:
 
 				if(!atoi(token)) flag=1;
-				ride->id_driver = atoi(token);
 				
+				else{
+
+					ride->id_driver = atoi(token);
+
+					// lookup on hashtable drivers for the id_driver and increment one to the number of rides
+
+					gpointer key = GINT_TO_POINTER(ride->id_driver);
+
+					DATA_DRIVER driver = g_hash_table_lookup(drivers,key);
+
+					if(!driver) flag=1;
+
+					set_increment_num_viagens_driver(driver);
+
+					}
+
 				break;
 			
 			case 3:
 
 				ride->username = strdup(token);
+
+				// lookup on hashtable users for username and increment one to the number of rides
+
+				DATA_USER user = g_hash_table_lookup(users,ride->username);
+
+				if(!user) flag=1;
+
+				set_increment_num_viagens(user);
+
 
 				break;
 			
@@ -185,24 +210,9 @@ DATA_RIDES create_rides(char *rides_line){
 	}
 
 
-	// printf("\n");
-	// printf("ID: %d\n",ride->id);
-	// printf("Date: %d-%d-%d\n",ride->date.tm_mday,ride->date.tm_mon,ride->date.tm_year+1900);
-	// printf("ID Driver: %d\n",ride->id_driver);
-	// printf("Username: %s\n",ride->username);
-	// printf("City: %d\n",ride->city);yjj
-	// printf("Distance: %d\n",ride->distance);
-	// printf("Score User: %d\n",ride->score_user);
-	// printf("Score Driver: %d\n",ride->score_driver);
-	// printf("Tip: %lf\n",ride->tip);
-	// printf("Comment: %s\n",ride->comment);
-	// printf("FLAG : %d\n",flag);
-
-
-
 
 	if(flag == 1 || i<9){
-//		printf("ERROR IN RIDE DATA!!!\n");
+		// printf("ERROR IN RIDE DATA!!!\n");
 		ride = NULL;
 	}
 
@@ -217,7 +227,7 @@ DATA_RIDES create_rides(char *rides_line){
 
 }
 
-void load_rides_to_DB(GHashTable *DB_rides,FILE *rides_file_pointer){
+void load_rides_to_DB(GHashTable *DB_rides,FILE *rides_file_pointer,GHashTable *DB_users,GHashTable *DB_drivers){
 	
 	//load datab_rides to ghash table
 	
@@ -226,22 +236,22 @@ void load_rides_to_DB(GHashTable *DB_rides,FILE *rides_file_pointer){
 	ssize_t rides_line_size_read;
 
 	DATA_RIDES ride = NULL;
-	guint id;
+	gint id;
 
-	printf("==================================> Loading rides to DB...\n\n");
+	printf("\n==================================> Loading rides to DB...\n\n");
 
 	while((rides_line_size_read = getline(&rides_line,&rides_line_size,rides_file_pointer)) != -1){
 
-		ride = create_rides(rides_line);
+		ride = create_rides(rides_line,DB_users,DB_drivers);
 
 		if(ride){
-			id = get_id_rides(ride)+1;
-			g_hash_table_insert(DB_rides,&id,ride);
+			id = get_id_rides(ride);
+			g_hash_table_insert(DB_rides,GINT_TO_POINTER(id),ride);
 		}
  
 	}
 	
-	printf("\n==================================> Rides loaded to DB\n\n\n");
+	printf("\n==================================> Rides loaded to DB ✅\n\n\n");
 
 	free(rides_line);
 

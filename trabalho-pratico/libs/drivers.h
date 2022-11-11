@@ -20,8 +20,16 @@ void get_account_creation_driver(DATA_DRIVER driver, struct tm *dest);
 int get_account_status_driver(DATA_DRIVER driver);
 
 
+void set_increment_num_viagens_driver(DATA_DRIVER driver);
+void set_avaliacao_total(DATA_DRIVER driver,int avaliacao);
+
+
 void free_driver(DATA_DRIVER driver);
 DATA_DRIVER create_driver(char *drivers_line);
 void load_drivers_to_DB(GHashTable *DB_drivers,FILE *drivers_file_pointer);
+DATA_DRIVER clone_driver(DATA_DRIVER driver);
+void print_driver(DATA_DRIVER driver);
+
+
 
 #endif
