@@ -310,7 +310,7 @@ void load_users_to_DB(GHashTable *DB_users,FILE *users_file_pointer){
 		if(user){
 			char *aux=NULL;
 			aux = get_username(user);
-			g_hash_table_insert(DB_users,strdup(aux),user);
+			g_hash_table_insert(DB_users,g_strdup(aux),user);
 			free(aux);
 		}
  

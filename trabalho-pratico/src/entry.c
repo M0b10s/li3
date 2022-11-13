@@ -108,7 +108,7 @@ int main(int argc, char const *argv[])
 
 
 	//users
-	GHashTable *datab_users = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, (void*)free_user);
+	GHashTable *datab_users = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, (void*)free_user);
 	//drivers
 	GHashTable *datab_drivers = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (void*)free_driver);
 	//rides

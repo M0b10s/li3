@@ -157,7 +157,6 @@ DATA_RIDES create_rides(char *rides_line,GHashTable *users, GHashTable *drivers)
 
 				set_increment_num_viagens(user);
 
-
 				break;
 			
 			case 4:

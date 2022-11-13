@@ -97,8 +97,8 @@
 
 void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable *DB_drivers, GHashTable *DB_rides){
 
-	char *line=malloc(1000);
-	char *command=malloc(1000);
+	char *line=NULL;
+	char *command=malloc(1000*sizeof(char));
 	int i = 1;
 	size_t len = 0;
 	ssize_t read;
@@ -116,7 +116,9 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 		int commando = atoi(token);
 
 		token = strtok(NULL, " ");
+
 		switch (commando){
+
 			case 1:
 
 				fprintf(output_file_pointer,"%s\n",token);
