@@ -21,7 +21,8 @@ int get_account_status_driver(DATA_DRIVER driver);
 
 
 void set_increment_num_viagens_driver(DATA_DRIVER driver);
-void set_avaliacao_total(DATA_DRIVER driver,int avaliacao);
+void set_increment_total_avaliacao_driver(DATA_DRIVER driver,int avaliacao);
+void set_increment_total_auferido_driver(DATA_DRIVER driver,double gasto);
 
 
 void free_driver(DATA_DRIVER driver);

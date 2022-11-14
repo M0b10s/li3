@@ -28,9 +28,9 @@ int get_account_status_user(DATA_USER user);
 //=========================================================SETTERS=======================================================================
 
 void set_increment_num_viagens(DATA_USER user);
-void set_distancia_viajada(DATA_USER user,double distancia);
-void set_total_avaliacao(DATA_USER user,double avaliacao);
-void set_total_gasto(DATA_USER user,double gasto);
+void set_increment_distancia_viajada(DATA_USER user,double distancia);
+void set_increment_total_avaliacao_user(DATA_USER user,double avaliacao);
+void set_increment_total_gasto(DATA_USER user,double gasto);
 
 //=======================================================================================================================================
 

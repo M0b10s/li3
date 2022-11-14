@@ -137,12 +137,12 @@ int main(int argc, char const *argv[])
 
 
 	start_queries(commands_file_pointer,datab_users,datab_drivers,datab_rides);
-	// DATA_DRIVER driver = g_hash_table_lookup(datab_drivers,(gpointer)1843); //check values for x driver WORKING RIGHT
-	// print_driver(driver);
-	// DATA_USER user = NULL;
-	// user = g_hash_table_lookup(datab_users,"MRibeiro33"); //check values for x user
-	// if(user)print_user(user);
-	// else printf("NOT FOUND!!!\n");
+	DATA_DRIVER driver = g_hash_table_lookup(datab_drivers,(gpointer)1843); //check values for x driver WORKING RIGHT
+	print_driver(driver);
+	DATA_USER user = NULL;
+	user = g_hash_table_lookup(datab_users,"MRibeiro33"); //check values for x user
+	if(user)print_user(user);
+	else printf("NOT FOUND!!!\n");
 
 
 	//=============================================================================================================================

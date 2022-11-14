@@ -20,6 +20,7 @@ typedef struct data_driver{
 	int age;
 	int num_viagens;
 	int avaliacao_total;
+	double total_auferido_driver; 
 
 
 
@@ -32,9 +33,14 @@ void set_increment_num_viagens_driver(DATA_DRIVER driver){
 	driver->num_viagens = driver->num_viagens + 1;
 }
 
-void set_avaliacao_total(DATA_DRIVER driver,int avaliacao){
+void set_increment_total_avaliacao_driver(DATA_DRIVER driver,int avaliacao){
 	driver->avaliacao_total += avaliacao;
 }
+
+void set_increment_total_auferido_driver(DATA_DRIVER driver,double gasto){
+	driver->total_auferido_driver += gasto;
+}
+
 
 //===============================================Get's=====================================================
 
@@ -123,6 +129,7 @@ void print_driver(DATA_DRIVER driver){
 	printf("age : %d\n",driver->age);
 	printf("num_viagens : %d\n",driver->num_viagens);
 	printf("avaliacao_total : %d\n",driver->avaliacao_total);
+	printf("total_auferido_driver : %f\n",driver->total_auferido_driver);
 	printf("\n");
 
 }

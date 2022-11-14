@@ -16,8 +16,8 @@ typedef struct data_user{
 	enum account_status account_status;
 	int idade;
 	int num_viagens;
-	double distancia_viajada;
-	double total_avaliacao;
+	int distancia_viajada;
+	int total_avaliacao;
 	double total_gasto;
 	
 }*DATA_USER;
@@ -30,15 +30,15 @@ void set_increment_num_viagens(DATA_USER user){
 
 }
 
-void set_distancia_viajada(DATA_USER user,double distancia){
+void set_increment_distancia_viajada(DATA_USER user,double distancia){
 	user->distancia_viajada += distancia;
 }
 
-void set_total_avaliacao(DATA_USER user,double avaliacao){
+void set_increment_total_avaliacao_user(DATA_USER user,double avaliacao){
 	user->total_avaliacao += avaliacao;
 }
 
-void set_total_gasto(DATA_USER user,double gasto){
+void set_increment_total_gasto(DATA_USER user,double gasto){
 	user->total_gasto += gasto;
 }
 
@@ -143,9 +143,9 @@ void print_user(DATA_USER user){
         	printf("account_status: %d\n",get_account_status_user(user));
         	printf("idade: %d\n",user->idade);
         	printf("num_viagens: %d\n",user->num_viagens);
-        	printf("distancia_viajada: %lf\n",user->distancia_viajada);
-        	printf("total_avaliacao: %lf\n",user->total_avaliacao);
-        	printf("total_gasto: %lf\n",user->total_gasto);
+        	printf("distancia_viajada: %d\n",user->distancia_viajada);
+        	printf("total_avaliacao: %d\n",user->total_avaliacao);
+        	printf("total_gasto: %.3f\n",user->total_gasto);
        		printf("\n");
     }
 
