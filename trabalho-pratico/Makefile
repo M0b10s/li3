@@ -1,5 +1,5 @@
 #==============================================================================
-SHELL   = zsh
+#SHELL   = zsh
 #------------------------------------------------------------------------------
 NO_COLOR=\x1b[0m
 OK_COLOR=\x1b[32m
@@ -19,10 +19,10 @@ INCLDS  = -I $(INC_DIR)
 BIN_DIR = saida
 BLD_DIR = obj
 DOC_DIR = docs
-INC_DIR = libs
+INC_DIR = includes
 OUT_DIR = Resultados
 SRC_DIR = src
-UTI_DIR = libs
+UTI_DIR = includes
 #------------------------------------------------------------------------------
 TRASH   = $(BLD_DIR)
 #------------------------------------------------------------------------------
@@ -60,12 +60,12 @@ $(PROGRAM): $(DEPS) $(OBJS)
 
 .PHONY: clean # Delete build artifacts
 clean:
-	for i in {0..15};do;clear;if (( i % 2 == 0 ));then cat libs/.art/maid.ascii;else cat libs/.art/maid2.ascii;fi;sleep 0.09;done
+	for i in {0..15};do;clear;if (( i % 2 == 0 ));then cat includes/.art/maid.ascii;else cat includes/.art/maid2.ascii;fi;sleep 0.09;done
 	@clear
-	@cat libs/.art/maid3.ascii
-	@echo -n "Cleaning "
-	@-rm -rf $(TRASH)/*.o
-	@-rm -rf $(TRASH)/*.d
+	@cat includes/.art/maid3.ascii
+	@-rm -rf $(TRASH)/*.o || true
+	@-rm -rf $(TRASH)/*.d || true
+	@echo -n "Cleaning"
 	@echo -e "$(OK_STRING)"
 
 ##=================================================================================
