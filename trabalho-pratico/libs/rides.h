@@ -21,6 +21,11 @@ int get_score_user_rides(DATA_RIDES ride);
 int get_score_driver_rides(DATA_RIDES ride);
 double get_tip_rides(DATA_RIDES ride);
 char *get_comment_rides(DATA_RIDES ride);
+int get_age_driver(DATA_DRIVER driver);
+int get_avaliacao_total_driver(DATA_DRIVER driver);
+int get_num_viagens_driver(DATA_DRIVER driver);
+double get_total_auferido_driver(DATA_DRIVER driver);
+int get_gender_driver(DATA_DRIVER driver);
 
 void free_rides(DATA_RIDES ride);
 DATA_RIDES create_rides(char *rides_line,GHashTable *DB_users, GHashTable *DB_drivers);

@@ -1,5 +1,9 @@
 #include <drivers.h>
 
+#define DAY_CALC 9
+#define MON_CALC 10
+#define YEA_CALC 2022
+
 enum gender{M,F};
 enum car_calss{basic,green,premium};
 enum city{Lisboa,Porto,Faro,Braga,Setubal};
@@ -47,6 +51,12 @@ void set_increment_total_auferido_driver(DATA_DRIVER driver,double gasto){
 int get_id_driver(DATA_DRIVER driver){
 
 	return driver->id;
+
+}
+
+int get_gender_driver(DATA_DRIVER driver){
+
+	return driver->gender;
 
 }
 
@@ -102,6 +112,26 @@ int get_age_driver(DATA_DRIVER driver){
 
 }
 
+int get_avaliacao_total_driver(DATA_DRIVER driver){
+
+	return driver->avaliacao_total;
+
+}
+
+int get_num_viagens_driver(DATA_DRIVER driver){
+
+	return driver->num_viagens;
+
+}
+
+double get_total_auferido_driver(DATA_DRIVER driver){
+
+	return driver->total_auferido_driver;
+
+}
+
+
+
 //===============================================END Get's=====================================================
 
 
@@ -129,7 +159,7 @@ void print_driver(DATA_DRIVER driver){
 	printf("age : %d\n",driver->age);
 	printf("num_viagens : %d\n",driver->num_viagens);
 	printf("avaliacao_total : %d\n",driver->avaliacao_total);
-	printf("total_auferido_driver : %f\n",driver->total_auferido_driver);
+	printf("total_auferido_driver : %5.3f\n",driver->total_auferido_driver);
 	printf("\n");
 
 }
@@ -279,15 +309,23 @@ DATA_DRIVER create_driver(char *drivers_line){
 			}
         	
 			// AGE CALCULATION
-			time_t t = time(NULL);
-			struct tm tm = *localtime(&t);
-			int age = tm.tm_year - driver->birth_day.tm_year;
-			if (tm.tm_mon < driver->birth_day.tm_mon || (tm.tm_mon == driver->birth_day.tm_mon && tm.tm_mday < driver->birth_day.tm_mday))
-				age--;
-			driver->age = age;
+			// time_t t = time(NULL);
+			// struct tm tm = *localtime(&t);
+			// int age = tm.tm_year - driver->birth_day.tm_year;
+			// if (tm.tm_mon < driver->birth_day.tm_mon || (tm.tm_mon == driver->birth_day.tm_mon && tm.tm_mday < driver->birth_day.tm_mday))
+			// 	age--;
+			// driver->age = age;
 
+			//AGE CALCULATION WITH DEFINE (DAY_CALC,MON_CALC,YEA_CALC) VALUES
+			int age = YEA_CALC - driver->birth_day.tm_year;
+			if (MON_CALC < driver->birth_day.tm_mon || (MON_CALC == driver->birth_day.tm_mon && DAY_CALC < driver->birth_day.tm_mday))
+				age--;
+			driver->age = age-1900;
+
+			//INITIALIZE OTHER VALUES
 			driver->num_viagens = 0;
 			driver->avaliacao_total = 0;
+			driver->total_auferido_driver = 0;
 
 
 		free(token);

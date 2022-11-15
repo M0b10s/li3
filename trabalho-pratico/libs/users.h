@@ -21,6 +21,13 @@ void get_birth_date_user(DATA_USER user,struct tm *dest);
 void get_account_creation_user(DATA_USER user, struct tm *dest);
 int get_pay_method_user(DATA_USER user);
 int get_account_status_user(DATA_USER user);
+int get_distancia_viajada(DATA_USER user);
+int get_total_avaliacao(DATA_USER user);
+double get_total_gasto(DATA_USER user);
+int get_idade(DATA_USER user);
+int get_num_viagens(DATA_USER user);
+
+
 
 //=======================================================================================================================================
 

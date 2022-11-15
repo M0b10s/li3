@@ -89,11 +89,8 @@
 			9 output : id_ride;date;distance;city;tip
 			*/
 
-#include "users.h"
-#include "drivers.h"
-#include "rides.h"
 #include "queries.h"
-
+#include "drivers.h"
 
 void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable *DB_drivers, GHashTable *DB_rides){
 
@@ -120,8 +117,43 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 		switch (commando){
 
 			case 1:
+				
+				strtok(token, "\n ");
 
-				fprintf(output_file_pointer,"%s\n",token);
+				if (g_hash_table_contains(DB_users,token)){
+
+					//we have a user
+					DATA_USER user = g_hash_table_lookup(DB_users,token);
+
+					if(!get_account_status_user(user)){
+						char aux;
+						int non_div_zero=0;
+						char *name_user = get_name_user(user);
+										if(get_gender_user(user) == 0) aux = 'M'; else aux = 'F';
+										if(get_num_viagens(user) == 0) non_div_zero=1;
+										fprintf(output_file_pointer,"%s;%c;%d;%.3f;%d;%.3f\n",name_user,aux,get_idade(user),((double)get_total_avaliacao(user)/(double)get_num_viagens(user)+(double)non_div_zero),get_num_viagens(user),get_total_gasto(user));
+						free(name_user);
+					}
+
+				}
+
+				else if (g_hash_table_contains(DB_drivers,GINT_TO_POINTER(atoi(token)))){
+
+					//we have a driver
+					DATA_DRIVER driver = g_hash_table_lookup(DB_drivers,GINT_TO_POINTER(atoi(token)));
+					
+					if(!get_account_status_driver(driver)){
+						char aux;
+						int non_div_zero=0;
+						char *name_driver = get_name_driver(driver);
+
+										if(get_gender_driver(driver) == 0) aux = 'M'; else aux = 'F';
+										if(get_num_viagens_driver(driver) == 0) non_div_zero=1;
+										fprintf(output_file_pointer,"%s;%c;%d;%.3f;%d;%.3f\n",name_driver,aux,get_age_driver(driver),((double)get_avaliacao_total_driver(driver)/(double)get_num_viagens_driver(driver)+(double)non_div_zero),get_num_viagens_driver(driver),get_total_auferido_driver(driver));
+						free(name_driver);
+					}
+
+				}
 
 				break;
 			

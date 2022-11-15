@@ -13,6 +13,7 @@ typedef struct data_driver *DATA_DRIVER;
 int get_id_driver(DATA_DRIVER driver);
 char *get_name_driver(DATA_DRIVER driver);
 void get_birth_day(DATA_DRIVER driver, struct tm *dest);
+int get_gender_driver(DATA_DRIVER driver);
 int get_car_class(DATA_DRIVER driver);
 char *get_license_plate(DATA_DRIVER driver);
 int get_city(DATA_DRIVER driver);

@@ -1,5 +1,8 @@
 #include<users.h>
 
+#define DAY_CALC 9
+#define MON_CALC 10
+#define YEA_CALC 2022
 
 enum gender{M,F};
 enum pay_method{cash,credit_card,debit_card};
@@ -102,13 +105,13 @@ int get_num_viagens(DATA_USER user){
 
 }
 
-double get_distancia_viajada(DATA_USER user){
+int get_distancia_viajada(DATA_USER user){
 
 	return user->distancia_viajada;
 
 }
 
-double get_total_avaliacao(DATA_USER user){
+int get_total_avaliacao(DATA_USER user){
 
 	return user->total_avaliacao;
 
@@ -145,7 +148,7 @@ void print_user(DATA_USER user){
         	printf("num_viagens: %d\n",user->num_viagens);
         	printf("distancia_viajada: %d\n",user->distancia_viajada);
         	printf("total_avaliacao: %d\n",user->total_avaliacao);
-        	printf("total_gasto: %.3f\n",user->total_gasto);
+        	printf("total_gasto: %5.3f\n",user->total_gasto);
        		printf("\n");
     }
 
@@ -273,13 +276,24 @@ DATA_USER create_user(char *users_line){
 			}
 			
 			// AGE CALCULATION
+			// time_t t = time(NULL);
+			// struct tm tm = *localtime(&t);
+			// int idade = tm.tm_year - user->birth_date.tm_year;
+			// if (tm.tm_mon < user->birth_date.tm_mon || (tm.tm_mon == user->birth_date.tm_mon && tm.tm_mday < user->birth_date.tm_mday))
+			// 	idade--;
+			// user->idade = idade;
 
-			time_t t = time(NULL);
-			struct tm tm = *localtime(&t);
-			int idade = tm.tm_year - user->birth_date.tm_year;
-			if (tm.tm_mon < user->birth_date.tm_mon || (tm.tm_mon == user->birth_date.tm_mon && tm.tm_mday < user->birth_date.tm_mday))
+			//AGE CALCULATION WITH DEFINE (DAY_CALC,MON_CALC,YEA_CALC) VALUES
+			int idade = YEA_CALC - user->birth_date.tm_year;
+			if (MON_CALC < user->birth_date.tm_mon || (MON_CALC == user->birth_date.tm_mon && DAY_CALC < user->birth_date.tm_mday))
 				idade--;
-			user->idade = idade;
+			user->idade = idade-1900;
+
+			//INITIALIZE OTHER VALUES
+			user->num_viagens = 0;
+			user->distancia_viajada = 0;
+			user->total_avaliacao = 0;
+			user->total_gasto = 0.0;
 
 
 		free(token);

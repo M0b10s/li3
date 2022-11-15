@@ -75,6 +75,14 @@ build compile program: setup $(PROGRAM)
 
 ##=================================================================================
 
+##=================================================================================
+
+.PHONY: check # Compare the output of the program with the expected output (Output only if there are differences)
+check:
+	@-diff -q Resultados/ Results/ || true
+
+##=================================================================================
+
 setup:
 
 	@mkdir -p $(BLD_DIR)

@@ -102,7 +102,8 @@ void free_rides(DATA_RIDES ride){
 
 void go_stats_rides(DATA_RIDES *ride, GHashTable *users, GHashTable *drivers){
 
-	DATA_USER user = g_hash_table_lookup(users,get_username_rides(*ride));
+	char *username = get_username_rides(*ride);
+	DATA_USER user = g_hash_table_lookup(users,username);
 
 	gpointer key = GINT_TO_POINTER(get_id_driver_rides(*ride));
 	DATA_DRIVER driver = g_hash_table_lookup(drivers,key);
@@ -118,22 +119,23 @@ void go_stats_rides(DATA_RIDES *ride, GHashTable *users, GHashTable *drivers){
 		set_increment_distancia_viajada(user,get_distance_rides(*ride));
 
 		if(get_car_class(driver) == 0){
-			int aux = BASIC_RIDE + (BASIC_KM * get_distance_rides(*ride))+get_tip_rides(*ride);
+			double aux = BASIC_RIDE + (BASIC_KM * get_distance_rides(*ride))+get_tip_rides(*ride);
 			set_increment_total_gasto(user,aux);
 			set_increment_total_auferido_driver(driver,aux);
 			}
 		else if(get_car_class(driver) == 1){
-			int aux = GREEN_RIDE + (GREEN_KM * get_distance_rides(*ride))+get_tip_rides(*ride);
+			double aux = GREEN_RIDE + (GREEN_KM * get_distance_rides(*ride))+get_tip_rides(*ride);
 			set_increment_total_gasto(user,aux);
 			set_increment_total_auferido_driver(driver,aux);
 			}
 		else{
-			int aux = PREMIUM_RIDE + (PREMIUM_KM * get_distance_rides(*ride))+get_tip_rides(*ride);
+			double aux = PREMIUM_RIDE + (PREMIUM_KM * get_distance_rides(*ride))+get_tip_rides(*ride);
 			set_increment_total_gasto(user,aux);
 			set_increment_total_auferido_driver(driver,aux);
 			}
 
 	}
+	free(username);
 
 }
 

@@ -7,6 +7,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <glib.h>
+#include "users.h"
+#include "drivers.h"
+#include "rides.h"
 
 
 typedef struct data_user *DATA_USER;
