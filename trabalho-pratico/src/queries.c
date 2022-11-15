@@ -90,7 +90,31 @@
 			*/
 
 #include "queries.h"
-#include "drivers.h"
+
+gint compare_drivers(gconstpointer a, gconstpointer b){
+
+	DATA_DRIVER driver1 = (DATA_DRIVER) a;
+	DATA_DRIVER driver2 = (DATA_DRIVER) b;
+
+	int non_div_zero_a = 0;
+	int non_div_zero_b = 0;
+	if(get_num_viagens_driver(driver1) == 0) non_div_zero_a = 1;
+	if(get_num_viagens_driver(driver2) == 0) non_div_zero_b = 1;
+
+	if(get_avaliacao_total_driver(driver1)/get_num_viagens_driver(driver1)+non_div_zero_a > get_avaliacao_total_driver(driver2)/get_num_viagens_driver(driver2)+non_div_zero_b)
+		return -1;
+	else if(get_avaliacao_total_driver(driver1)/get_num_viagens_driver(driver1)+non_div_zero_a < get_avaliacao_total_driver(driver2)/get_num_viagens_driver(driver2)+non_div_zero_b)
+		return 1;
+	else{
+		if(get_id_driver(driver1) > get_id_driver(driver2))
+			return -1;
+		else if(get_id_driver(driver1) < get_id_driver(driver2))
+			return 1;
+		else
+			return 0;
+	}
+}
+
 
 void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable *DB_drivers, GHashTable *DB_rides){
 
@@ -154,6 +178,20 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 					}
 
 				}
+
+				break;
+
+			case 2:
+
+				// GList *list = g_hash_table_get_values(DB_drivers);
+				// list = g_list_sort(list,compare_drivers);
+				// int n = atoi(token);
+				// int i = 0;
+				// while(i<n){
+				// 	fprintf(output_file_pointer,"%d;%s;%.3f\n",get_id_driver(g_list_nth_data(list,i)),get_name_driver(g_list_nth_data(list,i)),(double)get_avaliacao_total_driver(g_list_nth_data(list,i))/get_num_viagens_driver(g_list_nth_data(list,i)));
+				// 	i++;
+				// }
+
 
 				break;
 			

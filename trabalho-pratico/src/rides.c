@@ -100,6 +100,21 @@ void free_rides(DATA_RIDES ride){
 
 }
 
+void print_rides(DATA_RIDES ride){
+
+	printf("ID: %d\n",ride->id);
+	printf("Date: %d/%d/%d\n",ride->date.tm_mday,ride->date.tm_mon,ride->date.tm_year+1900);
+	printf("ID Driver: %d\n",ride->id_driver);
+	printf("Username: %s\n",ride->username);
+	printf("City: %d\n",ride->city);
+	printf("Distance: %d\n",ride->distance);
+	printf("Score User: %d\n",ride->score_user);
+	printf("Score Driver: %d\n",ride->score_driver);
+	printf("Tip: %f\n",ride->tip);
+	printf("Comment: %s\n",ride->comment);
+
+}
+
 void go_stats_rides(DATA_RIDES *ride, GHashTable *users, GHashTable *drivers){
 
 	char *username = get_username_rides(*ride);
@@ -237,7 +252,7 @@ DATA_RIDES create_rides(char *rides_line,GHashTable *users, GHashTable *drivers)
 
 	}
 
-
+	ride->date.tm_mon += 1;
 
 	if(flag == 1 || i<9){
 		// printf("ERROR IN RIDE DATA!!!\n");

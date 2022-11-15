@@ -283,18 +283,19 @@ DATA_USER create_user(char *users_line){
 			// 	idade--;
 			// user->idade = idade;
 
-			//AGE CALCULATION WITH DEFINE (DAY_CALC,MON_CALC,YEA_CALC) VALUES
-			int idade = YEA_CALC - user->birth_date.tm_year;
-			if (MON_CALC < user->birth_date.tm_mon || (MON_CALC == user->birth_date.tm_mon && DAY_CALC < user->birth_date.tm_mday))
-				idade--;
-			user->idade = idade-1900;
-
 			//INITIALIZE OTHER VALUES
 			user->num_viagens = 0;
 			user->distancia_viajada = 0;
 			user->total_avaliacao = 0;
 			user->total_gasto = 0.0;
+			user->birth_date.tm_mon += 1;
+			user->account_creation.tm_mon += 1;
 
+			//AGE CALCULATION WITH DEFINE (DAY_CALC,MON_CALC,YEA_CALC) VALUES
+			int idade = YEA_CALC - user->birth_date.tm_year;
+			if (MON_CALC < user->birth_date.tm_mon || (MON_CALC == user->birth_date.tm_mon && DAY_CALC < user->birth_date.tm_mday))
+				idade--;
+			user->idade = idade-1900;
 
 		free(token);
 
