@@ -60,7 +60,7 @@ $(PROGRAM): $(DEPS) $(OBJS)
 
 .PHONY: clean # Delete build artifacts
 clean:
-	for i in {0..15};do;clear;if (( i % 2 == 0 ));then cat includes/.art/maid.ascii;else cat includes/.art/maid2.ascii;fi;sleep 0.09;done
+	#for i in {0..15};do;clear;if (( i % 2 == 0 ));then cat includes/.art/maid.ascii;else cat includes/.art/maid2.ascii;fi;sleep 0.09;done
 	@clear
 	@cat includes/.art/maid3.ascii
 	@-rm -rf $(TRASH)/*.o || true
