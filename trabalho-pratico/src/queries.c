@@ -1,64 +1,4 @@
-/*	details:
-
-		dates are in the format dd/mm/yyyy
-
-		accounts assume active or inactive
-
-		car_class:
-
-			Basic : price : 3,25€ + 0,62€/km
-			Green : price : 4,00€ + 0,79€/km
-			Premium : price : 5,20€ + 0,94€/km
-		
-		tips are in the format € and don't consider the value of the ride
-		
-		float results are rounded to 3 decimal places
-
-		ride values are in the format €
-
-		queries with invalid inputs generate a empty file
-
-
-
-		Users dataset by index:
-		
-		username -> string
-		name -> string
-		gender -> string (M/F) -> Enum
-		birth_date -> string (dd/mm/yyyy)
-		account_creation_date -> string (dd/mm/yyyy)
-		pay_method -> string (cash/credit card/debit card) -> Enum
-		account_status -> string (active/inactive) -> Enum
-
-
-		Drivers dataset by index:
-
-		id -> int
-		name -> string
-		birth_day -> string (dd/mm/yyyy)
-		gender -> string (M/F) -> Enum
-		car_class -> string (basic/green/premium) -> Enum
-		license_plate -> string
-		city -> string (Lisboa/Porto/Faro/Braga/Setúbal) -> Enum
-		account_creation -> string (dd/mm/yyyy)
-		account_status -> string (active/inactive) -> Enum
-
-
-		Rides dataset by index:
-		
-		id -> int
-		date -> string (dd/mm/yyyy)
-		driver -> int
-		user -> string
-		city -> string (Lisboa/Porto/Faro/Braga/Setúbal) -> Enum
-		distance -> int
-		score_user -> int
-		score_driver -> int
-		tip -> double (€)
-		comment -> string
-
-
-		Queries:
+/*		Queries:
 
 			1 - get details from user with username <username> or driver with id <id>
 			1 output : name;gender;age;score;number_rides;total_spent/earned
@@ -91,7 +31,7 @@
 
 #include "queries.h"
 
-gint compare_drivers(gconstpointer a, gconstpointer b){
+gint compare_drivers_orderby_score_id(gconstpointer a, gconstpointer b){
 
 	DATA_DRIVER driver1 = (DATA_DRIVER) a;
 	DATA_DRIVER driver2 = (DATA_DRIVER) b;
@@ -101,19 +41,80 @@ gint compare_drivers(gconstpointer a, gconstpointer b){
 	if(get_num_viagens_driver(driver1) == 0) non_div_zero_a = 1;
 	if(get_num_viagens_driver(driver2) == 0) non_div_zero_b = 1;
 
-	if(get_avaliacao_total_driver(driver1)/get_num_viagens_driver(driver1)+non_div_zero_a > get_avaliacao_total_driver(driver2)/get_num_viagens_driver(driver2)+non_div_zero_b)
+	if((double)get_avaliacao_total_driver(driver1)/(double)get_num_viagens_driver(driver1)+non_div_zero_a > (double)get_avaliacao_total_driver(driver2)/(double)get_num_viagens_driver(driver2)+non_div_zero_b)
+	
 		return -1;
-	else if(get_avaliacao_total_driver(driver1)/get_num_viagens_driver(driver1)+non_div_zero_a < get_avaliacao_total_driver(driver2)/get_num_viagens_driver(driver2)+non_div_zero_b)
+	
+	else if((double)get_avaliacao_total_driver(driver1)/(double)get_num_viagens_driver(driver1)+non_div_zero_a < (double)get_avaliacao_total_driver(driver2)/(double)get_num_viagens_driver(driver2)+non_div_zero_b)
+	
 		return 1;
+	
 	else{
+		
 		if(get_id_driver(driver1) > get_id_driver(driver2))
+		
 			return -1;
+		
 		else if(get_id_driver(driver1) < get_id_driver(driver2))
+		
 			return 1;
+		
 		else
+
 			return 0;
 	}
+
 }
+
+int compare_tmdates(struct tm date1, struct tm date2){
+
+	if(date1.tm_year > date2.tm_year)
+		return 1;
+	else if(date1.tm_year < date2.tm_year)
+		return -1;
+
+	else{
+
+		if(date1.tm_mon > date2.tm_mon)
+			return 1;
+		else if(date1.tm_mon < date2.tm_mon)
+			return -1;
+		
+		else{
+
+			if(date1.tm_mday > date2.tm_mday)
+				return 1;
+			else if(date1.tm_mday < date2.tm_mday)
+				return -1;
+			else
+				return 0;
+		
+		}
+	
+	}
+
+}
+
+double get_cost_ride(DATA_RIDES ride, GHashTable* drivers){
+
+	int distancia=0;
+
+	if(ride == NULL){printf("funk");return -1;}
+
+	distancia = get_distance_rides(ride);
+	int car_type = 0;
+	DATA_DRIVER driver = g_hash_table_lookup(drivers, GINT_TO_POINTER(get_id_driver_rides(ride)));
+	if(driver == NULL){printf("funk");return -1;}
+	car_type = get_car_class(driver);
+
+
+	if(car_type == 0) return distancia*0.62+3.25;
+	else if(car_type == 1) return distancia*0.79+4.0;
+	else if(car_type == 2) return distancia*0.94+5.20;
+	
+	else {printf("funk");return -1;}
+}
+
 
 
 void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable *DB_drivers, GHashTable *DB_rides){
@@ -154,8 +155,8 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 						int non_div_zero=0;
 						char *name_user = get_name_user(user);
 										if(get_gender_user(user) == 0) aux = 'M'; else aux = 'F';
-										if(get_num_viagens(user) == 0) non_div_zero=1;
-										fprintf(output_file_pointer,"%s;%c;%d;%.3f;%d;%.3f\n",name_user,aux,get_idade(user),((double)get_total_avaliacao(user)/(double)get_num_viagens(user)+(double)non_div_zero),get_num_viagens(user),get_total_gasto(user));
+										if(get_num_viagens_user(user) == 0) non_div_zero=1;
+										fprintf(output_file_pointer,"%s;%c;%d;%.3f;%d;%.3f\n",name_user,aux,get_idade_user(user),((double)get_total_avaliacao_user(user)/(double)get_num_viagens_user(user)+(double)non_div_zero),get_num_viagens_user(user),get_total_gasto_user(user));
 						free(name_user);
 					}
 
@@ -183,17 +184,59 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 
 			case 2:
 
-				// GList *list = g_hash_table_get_values(DB_drivers);
-				// list = g_list_sort(list,compare_drivers);
-				// int n = atoi(token);
-				// int i = 0;
-				// while(i<n){
-				// 	fprintf(output_file_pointer,"%d;%s;%.3f\n",get_id_driver(g_list_nth_data(list,i)),get_name_driver(g_list_nth_data(list,i)),(double)get_avaliacao_total_driver(g_list_nth_data(list,i))/get_num_viagens_driver(g_list_nth_data(list,i)));
-				// 	i++;
-				// }
+				GList *list = g_hash_table_get_values(DB_drivers);
+				list = g_list_sort(list,compare_drivers_orderby_score_id);
+				int n = atoi(token);
+				int counter_q2 = 0;
+				char *name_driver=NULL;
+				while(counter_q2<n){
+					name_driver = get_name_driver(g_list_nth_data(list,counter_q2));
+					if(!get_account_status_driver(g_list_nth_data(list,counter_q2)))
+					fprintf(output_file_pointer,"%012d;%s;%.3f\n",get_id_driver(g_list_nth_data(list,i)),name_driver,(double)get_avaliacao_total_driver(g_list_nth_data(list,i))/(double)get_num_viagens_driver(g_list_nth_data(list,i)));
+					counter_q2++;
+					free(name_driver);
+				}
 
+				g_list_free(list);
 
 				break;
+
+			case 3:
+				break;
+
+			case 4:
+				
+				char *city = strtok(token, "\n ");
+				int city_int=0;
+
+				if(!strcmp(city,"Lisboa")) city_int = 0;
+				else if(!strcmp(city,"Porto")) city_int = 1;
+				else if(!strcmp(city,"Faro")) city_int = 2;
+				else if(!strcmp(city,"Braga")) city_int = 3;
+				else if(!strcmp(city,"Setúbal")) city_int = 4;
+
+
+				GHashTableIter iter;
+				gpointer key, value;
+				g_hash_table_iter_init (&iter, DB_rides);
+				double total_cost=0;
+				int total_rides=0;
+				while(g_hash_table_iter_next (&iter, &key, &value)){
+
+					if(get_city_rides(value) == city_int){
+						total_cost += get_cost_ride(g_hash_table_lookup(DB_rides,GINT_TO_POINTER(get_id_rides(value))),DB_drivers);
+						total_rides++;
+					}
+
+				}
+
+				int nz = 0;
+				if(total_rides == 0) nz=1;
+				double average_cost = (double)total_cost/(double)total_rides+(double)nz;
+				fprintf(output_file_pointer,"%.3f\n",average_cost);
+
+				break;
+
 			
 			default:
 				

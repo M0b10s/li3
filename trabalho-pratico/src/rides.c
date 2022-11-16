@@ -127,25 +127,25 @@ void go_stats_rides(DATA_RIDES *ride, GHashTable *users, GHashTable *drivers){
 
 	else {
 
-		set_increment_num_viagens(user);
+		set_increment_num_viagens_user(user);
 		set_increment_num_viagens_driver(driver);
 		set_increment_total_avaliacao_user(user,get_score_user_rides(*ride));
 		set_increment_total_avaliacao_driver(driver,get_score_driver_rides(*ride));
-		set_increment_distancia_viajada(user,get_distance_rides(*ride));
+		set_increment_distancia_viajada_user(user,get_distance_rides(*ride));
 
 		if(get_car_class(driver) == 0){
 			double aux = BASIC_RIDE + (BASIC_KM * get_distance_rides(*ride))+get_tip_rides(*ride);
-			set_increment_total_gasto(user,aux);
+			set_increment_total_gasto_user(user,aux);
 			set_increment_total_auferido_driver(driver,aux);
 			}
 		else if(get_car_class(driver) == 1){
 			double aux = GREEN_RIDE + (GREEN_KM * get_distance_rides(*ride))+get_tip_rides(*ride);
-			set_increment_total_gasto(user,aux);
+			set_increment_total_gasto_user(user,aux);
 			set_increment_total_auferido_driver(driver,aux);
 			}
 		else{
 			double aux = PREMIUM_RIDE + (PREMIUM_KM * get_distance_rides(*ride))+get_tip_rides(*ride);
-			set_increment_total_gasto(user,aux);
+			set_increment_total_gasto_user(user,aux);
 			set_increment_total_auferido_driver(driver,aux);
 			}
 

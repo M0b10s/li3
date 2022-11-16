@@ -54,12 +54,6 @@ int get_id_driver(DATA_DRIVER driver){
 
 }
 
-int get_gender_driver(DATA_DRIVER driver){
-
-	return driver->gender;
-
-}
-
 char *get_name_driver(DATA_DRIVER driver){
 
 	return strdup(driver->name);
@@ -71,6 +65,12 @@ void get_birth_day(DATA_DRIVER driver, struct tm *dest){
 	dest->tm_mday = driver->birth_day.tm_mday;
 	dest->tm_mon = driver->birth_day.tm_mon;
 	dest->tm_year = driver->birth_day.tm_year;
+
+}
+
+int get_gender_driver(DATA_DRIVER driver){
+
+	return driver->gender;
 
 }
 
@@ -86,7 +86,7 @@ char *get_license_plate(DATA_DRIVER driver){
 
 }
 
-int get_city(DATA_DRIVER driver){
+int get_city_driver(DATA_DRIVER driver){
 
 	return driver->city;
 
@@ -112,15 +112,15 @@ int get_age_driver(DATA_DRIVER driver){
 
 }
 
-int get_avaliacao_total_driver(DATA_DRIVER driver){
-
-	return driver->avaliacao_total;
-
-}
-
 int get_num_viagens_driver(DATA_DRIVER driver){
 
 	return driver->num_viagens;
+
+}
+
+int get_avaliacao_total_driver(DATA_DRIVER driver){
+
+	return driver->avaliacao_total;
 
 }
 

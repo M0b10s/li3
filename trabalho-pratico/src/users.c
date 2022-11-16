@@ -27,13 +27,13 @@ typedef struct data_user{
 
 //===============================================Set's=====================================================
 
-void set_increment_num_viagens(DATA_USER user){
+void set_increment_num_viagens_user(DATA_USER user){
 	
 	if(user) user->num_viagens = user->num_viagens + 1;
 
 }
 
-void set_increment_distancia_viajada(DATA_USER user,double distancia){
+void set_increment_distancia_viajada_user(DATA_USER user,double distancia){
 	user->distancia_viajada += distancia;
 }
 
@@ -41,7 +41,7 @@ void set_increment_total_avaliacao_user(DATA_USER user,double avaliacao){
 	user->total_avaliacao += avaliacao;
 }
 
-void set_increment_total_gasto(DATA_USER user,double gasto){
+void set_increment_total_gasto_user(DATA_USER user,double gasto){
 	user->total_gasto += gasto;
 }
 
@@ -93,31 +93,31 @@ int get_account_status_user(DATA_USER user){
 
 }
 
-int get_idade(DATA_USER user){
+int get_idade_user(DATA_USER user){
 
 	return user->idade;
 
 }
 
-int get_num_viagens(DATA_USER user){
+int get_num_viagens_user(DATA_USER user){
 
 	return user->num_viagens;
 
 }
 
-int get_distancia_viajada(DATA_USER user){
+int get_distancia_viajada_user(DATA_USER user){
 
 	return user->distancia_viajada;
 
 }
 
-int get_total_avaliacao(DATA_USER user){
+int get_total_avaliacao_user(DATA_USER user){
 
 	return user->total_avaliacao;
 
 }
 
-double get_total_gasto(DATA_USER user){
+double get_total_gasto_user(DATA_USER user){
 
 	return user->total_gasto;
 

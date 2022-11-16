@@ -21,11 +21,11 @@ void get_birth_date_user(DATA_USER user,struct tm *dest);
 void get_account_creation_user(DATA_USER user, struct tm *dest);
 int get_pay_method_user(DATA_USER user);
 int get_account_status_user(DATA_USER user);
-int get_distancia_viajada(DATA_USER user);
-int get_total_avaliacao(DATA_USER user);
-double get_total_gasto(DATA_USER user);
-int get_idade(DATA_USER user);
-int get_num_viagens(DATA_USER user);
+int get_idade_user(DATA_USER user);
+int get_num_viagens_user(DATA_USER user);
+int get_distancia_viajada_user(DATA_USER user);
+int get_total_avaliacao_user(DATA_USER user);
+double get_total_gasto_user(DATA_USER user);
 
 
 
@@ -34,20 +34,20 @@ int get_num_viagens(DATA_USER user);
 
 //=========================================================SETTERS=======================================================================
 
-void set_increment_num_viagens(DATA_USER user);
-void set_increment_distancia_viajada(DATA_USER user,double distancia);
+void set_increment_num_viagens_user(DATA_USER user);
+void set_increment_distancia_viajada_user(DATA_USER user,double distancia);
 void set_increment_total_avaliacao_user(DATA_USER user,double avaliacao);
-void set_increment_total_gasto(DATA_USER user,double gasto);
+void set_increment_total_gasto_user(DATA_USER user,double gasto);
 
 //=======================================================================================================================================
 
 //==========================================================FUNCS========================================================================
 
 void free_user(DATA_USER user);
-DATA_USER create_user(char *users_line);
-void load_users_to_DB(GHashTable *DB_users,FILE *users_file_pointer);
 void print_user(DATA_USER user);
 DATA_USER clone_user(DATA_USER user);
+DATA_USER create_user(char *users_line);
+void load_users_to_DB(GHashTable *DB_users,FILE *users_file_pointer);
 
 //=======================================================================================================================================
 
