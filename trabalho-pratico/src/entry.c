@@ -129,7 +129,7 @@ int main(int argc, char const *argv[])
 
 	printf("Users: %d\n",g_hash_table_size(datab_users));
 	printf("Drivers: %d\n",g_hash_table_size(datab_drivers));
-	printf("Rides: %d\n",g_hash_table_size(datab_rides));
+	printf("Rides: %d\n\n",g_hash_table_size(datab_rides));
 
 
 	//=============================================================================================================================

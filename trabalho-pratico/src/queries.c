@@ -307,6 +307,75 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 
 				break;
 
+			case 6:
+
+				struct tm data_inicio_q6;
+				struct tm data_fim_q6;
+				char *dates_q6;
+				char *city_q6;
+
+				city_q6 = strsep(&multi_arg, " ");
+				city_q6 = strsep(&multi_arg, " ");
+				dates_q6 = strsep(&multi_arg, " ");
+
+				strptime(dates_q6,"%d/%m/%Y",&data_inicio_q6);
+				data_inicio_q6.tm_mon++;
+
+				dates_q6 = strsep(&multi_arg, " ");
+
+				strptime(dates_q6,"%d/%m/%Y",&data_fim_q6);
+				data_fim_q6.tm_mon++;
+							
+
+				GHashTableIter iterq6;
+				gpointer keyq6, valueq6;
+				g_hash_table_iter_init (&iterq6, DB_rides);
+				
+				struct tm data_1_struct_q6;
+				int city_int_q6=0;
+
+				if(!strcmp(city_q6,"Lisboa")) city_int_q6 = 0;
+				else if(!strcmp(city_q6,"Porto")) city_int_q6 = 1;
+				else if(!strcmp(city_q6,"Faro")) city_int_q6 = 2;
+				else if(!strcmp(city_q6,"Braga")) city_int_q6 = 3;
+				else if(!strcmp(city_q6,"Setúbal")) city_int_q6 = 4;
+
+			
+				GList *list_rides_q6 = NULL;
+				while(g_hash_table_iter_next(&iterq6, &keyq6, &valueq6)){
+				
+				get_date_rides(valueq6,&data_1_struct_q6);
+
+					if(compare_tmdates(data_1_struct_q6,data_inicio_q6) >= 0  && compare_tmdates(data_1_struct_q6,data_fim_q6) <= 0 && get_city_rides(valueq6) == city_int_q6){
+				
+						list_rides_q6 = g_list_prepend(list_rides_q6,valueq6);
+					
+					}
+
+				}
+
+				double total_distance_q6=0;
+				int total_rides_q6=0;
+				GList *aux_q6 = list_rides_q6;
+
+				while(aux_q6!=NULL){
+					total_distance_q6 += get_distance_rides(aux_q6->data);
+					total_rides_q6++;
+					aux_q6 = aux_q6->next;
+				}
+
+				if(total_rides_q6 == 0) break;
+
+				else{
+
+					double average_distance_q6 = (double)total_distance_q6/(double)total_rides_q6; 
+
+					fprintf(output_file_pointer,"%.3f\n",average_distance_q6);
+				}
+
+				g_list_free(list_rides_q6);
+
+				break;
 			
 			default:
 				
