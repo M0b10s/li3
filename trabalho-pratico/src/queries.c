@@ -95,16 +95,18 @@ int compare_tmdates(struct tm date1, struct tm date2){
 
 }
 
+
+
 double get_cost_ride(DATA_RIDES ride, GHashTable* drivers){
 
 	int distancia=0;
 
-	if(ride == NULL){printf("funk");return -1;}
+	if(ride == NULL) return -1;
 
 	distancia = get_distance_rides(ride);
 	int car_type = 0;
 	DATA_DRIVER driver = g_hash_table_lookup(drivers, GINT_TO_POINTER(get_id_driver_rides(ride)));
-	if(driver == NULL){printf("funk");return -1;}
+	if(driver == NULL) return -1;
 	car_type = get_car_class(driver);
 
 
@@ -112,7 +114,7 @@ double get_cost_ride(DATA_RIDES ride, GHashTable* drivers){
 	else if(car_type == 1) return distancia*0.79+4.0;
 	else if(car_type == 2) return distancia*0.94+5.20;
 	
-	else {printf("funk");return -1;}
+	else return -1;
 }
 
 
@@ -120,7 +122,7 @@ double get_cost_ride(DATA_RIDES ride, GHashTable* drivers){
 void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable *DB_drivers, GHashTable *DB_rides){
 
 	char *line=NULL;
-	char *command=malloc(1000*sizeof(char));
+	char *output_file_name=malloc(1000*sizeof(char));
 	int i = 1;
 	size_t len = 0;
 	ssize_t read;
@@ -130,25 +132,26 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 		// printf("%s", line);
 
 		//process command
-		sprintf(command,"%s%d%s","Resultados/command",i,"_output.txt");
+		sprintf(output_file_name,"%s%d%s","Resultados/command",i,"_output.txt");
 		
-		FILE *output_file_pointer = fopen(command,"w+");
+		FILE *output_file_pointer = fopen(output_file_name,"w+");
 
+		char *multi_arg = strdup(line);
+		char *tofree = multi_arg;
 		char *token = strtok(line, " ");
 		int commando = atoi(token);
-
-		token = strtok(NULL, " ");
 
 		switch (commando){
 
 			case 1:
 				
-				strtok(token, "\n ");
-
-				if (g_hash_table_contains(DB_users,token)){
+				strsep(&multi_arg, " \n");
+				strtok(multi_arg, "\n");
+				
+				if (g_hash_table_contains(DB_users,multi_arg)){
 
 					//we have a user
-					DATA_USER user = g_hash_table_lookup(DB_users,token);
+					DATA_USER user = g_hash_table_lookup(DB_users,multi_arg);
 
 					if(!get_account_status_user(user)){
 						char aux;
@@ -162,10 +165,10 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 
 				}
 
-				else if (g_hash_table_contains(DB_drivers,GINT_TO_POINTER(atoi(token)))){
+				else if (g_hash_table_contains(DB_drivers,GINT_TO_POINTER(atoi(multi_arg)))){
 
 					//we have a driver
-					DATA_DRIVER driver = g_hash_table_lookup(DB_drivers,GINT_TO_POINTER(atoi(token)));
+					DATA_DRIVER driver = g_hash_table_lookup(DB_drivers,GINT_TO_POINTER(atoi(multi_arg)));
 					
 					if(!get_account_status_driver(driver)){
 						char aux;
@@ -184,9 +187,12 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 
 			case 2:
 
+				strsep(&multi_arg, "\n ");
+				strtok(multi_arg, "\n");
+
 				GList *list = g_hash_table_get_values(DB_drivers);
 				list = g_list_sort(list,compare_drivers_orderby_score_id);
-				int n = atoi(token);
+				int n = atoi(multi_arg);
 				int counter_q2 = 0;
 				char *name_driver=NULL;
 				while(counter_q2<n){
@@ -202,11 +208,14 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 				break;
 
 			case 3:
+				strsep(&multi_arg, "\n ");
+				strtok(multi_arg, "\n");
 				break;
 
 			case 4:
 				
-				char *city = strtok(token, "\n ");
+				strsep(&multi_arg, "\n ");
+				char *city = strtok(multi_arg, "\n ");
 				int city_int=0;
 
 				if(!strcmp(city,"Lisboa")) city_int = 0;
@@ -237,6 +246,67 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 
 				break;
 
+			case 5:
+
+				struct tm data_inicio;
+				struct tm data_fim;
+				char *dates;
+
+				dates = strsep(&multi_arg, " ");
+				dates = strsep(&multi_arg, " ");
+
+				strptime(dates,"%d/%m/%Y",&data_inicio);
+				data_inicio.tm_mon++;
+
+				dates = strsep(&multi_arg, " ");
+
+				strptime(dates,"%d/%m/%Y",&data_fim);
+				data_fim.tm_mon++;
+
+				//get all rides in the interval data_inicio - data_fim
+				GHashTableIter iterq5;
+				gpointer key2, valueq5;
+				g_hash_table_iter_init (&iterq5, DB_rides);
+				
+				struct tm data_1_struct;
+
+				//get all rides in the interval data_inicio - data_fim in a glist
+				GList *list_rides = NULL;
+				while(g_hash_table_iter_next(&iterq5, &key2, &valueq5)){
+				
+				get_date_rides(valueq5,&data_1_struct);
+
+					if(compare_tmdates(data_1_struct,data_inicio) >= 0  && compare_tmdates(data_1_struct,data_fim) <= 0){
+				
+						list_rides = g_list_prepend(list_rides,valueq5);
+					
+					}
+
+				}
+
+				double total_cost_q5=0;
+				int total_rides_q5=0;
+				GList *aux_q5 = list_rides;
+
+				while(aux_q5!=NULL){
+					total_cost_q5 += get_cost_ride(g_hash_table_lookup(DB_rides,GINT_TO_POINTER(get_id_rides(aux_q5->data))),DB_drivers);
+					total_rides_q5++;
+					aux_q5 = aux_q5->next;
+				}
+
+				if(total_rides_q5 == 0) break;
+
+				else{
+
+					double average_cost_q5 = (double)total_cost_q5/(double)total_rides_q5; 
+
+					fprintf(output_file_pointer,"%.3f\n",average_cost_q5);
+				}
+
+				g_list_free(list_rides);
+
+				break;
+
 			
 			default:
 				
@@ -247,14 +317,15 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 				// printf("\n");
 
 				break;
-	
-		}
-			i++;
-			fclose(output_file_pointer);
-	
+			
+			}
+
+		i++;
+		fclose(output_file_pointer);	
+		free(tofree);
 	}
 
 	free(line);
-	free(command);
+	free(output_file_name);
 
 }

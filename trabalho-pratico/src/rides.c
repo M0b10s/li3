@@ -252,6 +252,7 @@ DATA_RIDES create_rides(char *rides_line,GHashTable *users, GHashTable *drivers)
 
 	}
 
+	//INITIALIZE OTHER VALUES
 	ride->date.tm_mon += 1;
 
 	if(flag == 1 || i<9){
