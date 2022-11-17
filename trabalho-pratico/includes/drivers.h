@@ -36,6 +36,7 @@ void print_driver(DATA_DRIVER driver);
 DATA_DRIVER clone_driver(DATA_DRIVER driver);
 DATA_DRIVER create_driver(char *drivers_line);
 void load_drivers_to_DB(GHashTable *DB_drivers,FILE *drivers_file_pointer);
+DATA_DRIVER ghost_driver(int id, char *name);
 
 
 

@@ -145,7 +145,11 @@ void free_driver(DATA_DRIVER driver){
 
 void print_driver(DATA_DRIVER driver){
 
-	printf("\n");
+	if(driver == NULL){
+		printf("Driver is NULL\n");
+		return;
+	}
+	else{
 	printf("\n");
 	printf("id : %d\n",driver->id);
 	printf("name : %s\n",driver->name);
@@ -160,7 +164,7 @@ void print_driver(DATA_DRIVER driver){
 	printf("num_viagens : %d\n",driver->num_viagens);
 	printf("avaliacao_total : %d\n",driver->avaliacao_total);
 	printf("total_auferido_driver : %5.3f\n",driver->total_auferido_driver);
-	printf("\n");
+	printf("\n");}
 
 }
 
@@ -179,8 +183,26 @@ DATA_DRIVER clone_driver(DATA_DRIVER driver){
 	clone->account_creation = driver->account_creation;
 	clone->account_status = driver->account_status;
 	clone->age = driver->age;
-	clone->num_viagens = driver->num_viagens;
-	clone->avaliacao_total = driver->avaliacao_total;
+	clone->num_viagens = 0;
+	clone->avaliacao_total = 0;
+
+	return clone;
+}
+
+DATA_DRIVER ghost_driver(int id, char *name){
+
+	DATA_DRIVER clone = malloc(sizeof(struct data_driver));
+
+	clone->id = id;
+	clone->name = strdup(name);
+	clone->gender = 0;
+	clone->car_class = 0;
+	clone->license_plate = NULL;
+	clone->city = 0;
+	clone->account_status = 0;
+	clone->age = 0;
+	clone->num_viagens = 0;
+	clone->avaliacao_total = 0;
 
 	return clone;
 }

@@ -325,7 +325,7 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 
 				strptime(dates_q6,"%d/%m/%Y",&data_fim_q6);
 				data_fim_q6.tm_mon++;
-							
+
 
 				GHashTableIter iterq6;
 				gpointer keyq6, valueq6;
@@ -377,6 +377,108 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 
 				break;
 			
+			case 7:
+
+				char *city_q7;
+				int city_int_q7=0;
+				int n_q7;
+
+				n_q7 = atoi(strsep(&multi_arg, " "));
+				n_q7 = atoi(strsep(&multi_arg, " "));
+
+				city_q7 = strsep(&multi_arg, " ");
+				city_q7 = strtok(city_q7,"\n");
+
+
+				if(!strcmp(city_q7,"Lisboa")) city_int_q7 = 0;
+				else if(!strcmp(city_q7,"Porto")) city_int_q7 = 1;
+				else if(!strcmp(city_q7,"Faro")) city_int_q7 = 2;
+				else if(!strcmp(city_q7,"Braga")) city_int_q7 = 3;
+				else if(!strcmp(city_q7,"Setúbal")) city_int_q7 = 4;
+
+
+				GHashTableIter iterq7;
+				gpointer keyq7, valueq7;
+				g_hash_table_iter_init (&iterq7, DB_rides);
+				
+				//iter over hashtable rides and get all rides that are in the city
+				GList *list_rides_q7 = NULL;
+				while(g_hash_table_iter_next(&iterq7, &keyq7, &valueq7)){
+				
+					if(get_city_rides(valueq7) == city_int_q7 && get_account_status_driver(g_hash_table_lookup(DB_drivers,GINT_TO_POINTER(get_id_driver_rides(valueq7))))==0){
+				
+						list_rides_q7 = g_list_prepend(list_rides_q7,valueq7);
+					
+					}
+
+				}
+
+				GHashTable *hash_table_q7 = g_hash_table_new_full(g_direct_hash,g_direct_equal,NULL,(void*)free_driver);
+				GList *aux_q7 = list_rides_q7;
+
+
+				while(aux_q7!=NULL){
+					
+					if(g_hash_table_contains(hash_table_q7,GINT_TO_POINTER(get_id_driver_rides(aux_q7->data)))){
+					
+						DATA_DRIVER new = g_hash_table_lookup(hash_table_q7,GINT_TO_POINTER(get_id_driver_rides(aux_q7->data)));
+						set_increment_num_viagens_driver(new);
+						set_increment_total_avaliacao_driver(new,get_score_driver_rides(aux_q7->data));
+
+					}
+					
+					else{
+						
+						DATA_DRIVER original = g_hash_table_lookup(DB_drivers,GINT_TO_POINTER(get_id_driver_rides(aux_q7->data)));
+						char *aux_q7_str = NULL;
+						aux_q7_str = get_name_driver(original);
+						DATA_DRIVER new = ghost_driver(get_id_driver(original),aux_q7_str);
+						set_increment_num_viagens_driver(new);
+						set_increment_total_avaliacao_driver(new,get_score_driver_rides(aux_q7->data));
+						g_hash_table_insert(hash_table_q7,GINT_TO_POINTER(get_id_driver(new)),new);
+						free(aux_q7_str);
+					}
+
+					aux_q7 = aux_q7->next;
+				}
+
+				GHashTableIter iterq7_2;
+				gpointer keyq7_2, valueq7_2;
+				g_hash_table_iter_init (&iterq7_2, hash_table_q7);
+
+				GList *list_q7 = NULL;
+				while(g_hash_table_iter_next(&iterq7_2, &keyq7_2, &valueq7_2)){
+				
+					list_q7 = g_list_prepend(list_q7,valueq7_2);
+					
+				}
+
+				list_q7 = g_list_sort(list_q7,compare_drivers_orderby_score_id);
+
+				//print to output file n drivers
+
+				GList *aux_q7_2 = list_q7;
+				int i_q7 = 0;
+
+				while(aux_q7_2!=NULL && i_q7<n_q7){
+
+					char *aux_q7_2_str = NULL;
+					aux_q7_2_str = get_name_driver(aux_q7_2->data);
+
+					fprintf(output_file_pointer,"%012d;%s;%.3f\n",get_id_driver(aux_q7_2->data),aux_q7_2_str,(double)get_avaliacao_total_driver(aux_q7_2->data)/(double)get_num_viagens_driver(aux_q7_2->data));
+					i_q7++;
+					aux_q7_2 = aux_q7_2->next;
+
+					free(aux_q7_2_str);
+				
+				}
+
+				g_list_free(list_q7);
+				g_list_free(list_rides_q7);
+				g_hash_table_destroy(hash_table_q7);
+
+				break;
+
 			default:
 				
 				// printf("\n");
