@@ -143,6 +143,12 @@ void free_driver(DATA_DRIVER driver){
 
 }
 
+void free_driver_void(void* driver){
+
+  free_driver(driver);
+
+}
+
 void print_driver(DATA_DRIVER driver){
 
 	if(driver == NULL){

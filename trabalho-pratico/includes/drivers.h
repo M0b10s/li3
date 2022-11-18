@@ -32,6 +32,7 @@ void set_increment_total_auferido_driver(DATA_DRIVER driver,double gasto);
 
 
 void free_driver(DATA_DRIVER driver);
+void free_driver_void(void* driver);
 void print_driver(DATA_DRIVER driver);
 DATA_DRIVER clone_driver(DATA_DRIVER driver);
 DATA_DRIVER create_driver(char *drivers_line);

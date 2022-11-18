@@ -133,6 +133,12 @@ void free_user(DATA_USER user){
 
 }
 
+void free_user_void(void* user){
+
+  free_user(user);
+
+}
+
 void print_user(DATA_USER user){
 
 	if(user){

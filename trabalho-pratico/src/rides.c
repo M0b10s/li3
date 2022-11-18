@@ -100,6 +100,12 @@ void free_rides(DATA_RIDES ride){
 
 }
 
+void free_rides_void(void* ride){
+
+  free_rides(ride);
+
+}
+
 void print_rides(DATA_RIDES ride){
 
 	printf("ID: %d\n",ride->id);

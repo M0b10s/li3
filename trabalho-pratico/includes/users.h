@@ -44,6 +44,7 @@ void set_increment_total_gasto_user(DATA_USER user,double gasto);
 //==========================================================FUNCS========================================================================
 
 void free_user(DATA_USER user);
+void free_user_void(void* user);
 void print_user(DATA_USER user);
 DATA_USER clone_user(DATA_USER user);
 DATA_USER create_user(char *users_line);

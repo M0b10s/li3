@@ -50,6 +50,7 @@ void free_aux_struct_q8(AUX_STRUCT_Q8 elem){
 	free(elem->nome_condutor);
 	free(elem->username_utilizador);
 	free(elem->nome_utilizador);
+	free(elem);
 
 }
 
@@ -588,9 +589,14 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 				GList *list_q8 = NULL;
 
 				while(g_hash_table_iter_next(&iterq8, &keyq8, &valueq8)){
+
+					char * username = NULL;
+					username = get_username_rides(valueq8);
 					
-					DATA_USER user_to_check = g_hash_table_lookup(DB_users,GINT_TO_POINTER(get_username_rides(valueq8)));
+					DATA_USER user_to_check = g_hash_table_lookup(DB_users,GINT_TO_POINTER(username));
 					DATA_DRIVER driver_to_check = g_hash_table_lookup(DB_drivers,GINT_TO_POINTER(get_id_driver_rides(valueq8)));
+
+					free(username);
 
 					if(get_gender_user(user_to_check) == gender_int && get_gender_driver(driver_to_check) == gender_int && get_account_status_user(user_to_check) == 0 && get_account_status_driver(driver_to_check) == 0 && num_anos_perfil_user(user_to_check) >= num_min_year_q8 && num_anos_perfil_driver(driver_to_check) >= num_min_year_q8){
 
@@ -635,13 +641,13 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 
 				}
 
-				// GList *aux_list2_q8 = processed_list_q8;
-				// while(aux_list2_q8){
+				GList *aux_list2_q8 = processed_list_q8;
+				while(aux_list2_q8){
 
-				// 	free_aux_struct_q8(aux_list2_q8->data);
-				// 	aux_list2_q8 = aux_list2_q8->next;
+					free_aux_struct_q8(aux_list2_q8->data);
+					aux_list2_q8 = aux_list2_q8->next;
 
-				// }
+				}
 
 
 				g_list_free(list_q8);

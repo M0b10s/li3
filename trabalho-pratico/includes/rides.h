@@ -23,6 +23,7 @@ double get_tip_rides(DATA_RIDES ride);
 char *get_comment_rides(DATA_RIDES ride);
 
 void free_rides(DATA_RIDES ride);
+void free_rides_void(void* ride);
 DATA_RIDES create_rides(char *rides_line,GHashTable *DB_users, GHashTable *DB_drivers);
 void load_rides_to_DB(GHashTable *DB_rides,FILE *rides_file_pointer, GHashTable *DB_users, GHashTable *DB_drivers);
 void print_rides(DATA_RIDES ride);
