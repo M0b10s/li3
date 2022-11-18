@@ -31,6 +31,66 @@
 
 #include "queries.h"
 
+
+typedef struct aux_struct_q8{
+
+	int id_condutor;
+	char *nome_condutor;
+	char *username_utilizador;
+	char *nome_utilizador;
+	struct tm data_driver;
+	struct tm data_user;
+	int id_viagem;
+
+}*AUX_STRUCT_Q8;
+
+
+void free_aux_struct_q8(AUX_STRUCT_Q8 elem){
+
+	free(elem->nome_condutor);
+	free(elem->username_utilizador);
+	free(elem->nome_utilizador);
+
+}
+
+
+#define DAY_CALC 9
+#define MON_CALC 10
+#define YEA_CALC 2022
+
+// compare q8 by date of driver and return,or if equal, by date of user an return, or if equal, by id of ride
+gint compare_q8(gconstpointer a, gconstpointer b){
+	AUX_STRUCT_Q8 elem1 = (AUX_STRUCT_Q8) a;
+	AUX_STRUCT_Q8 elem2 = (AUX_STRUCT_Q8) b;
+	if(compare_tmdates(elem1->data_driver,elem2->data_driver) == 0){
+		if(compare_tmdates(elem1->data_user,elem2->data_user) == 0){
+			if(elem1->id_viagem > elem2->id_viagem){
+				return 1;
+			}
+			else{
+				return 0;
+			}
+		}
+		else{
+			if(compare_tmdates(elem1->data_user,elem2->data_user) == 1){
+				return 1;
+			}
+			else{
+				return 0;
+			}
+		}
+	}
+	else{
+		if(compare_tmdates(elem1->data_driver,elem2->data_driver) == 1){
+			return 1;
+		}
+		else{
+			return 0;
+		}
+	}
+}
+
+
 gint compare_drivers_orderby_score_id(gconstpointer a, gconstpointer b){
 
 	DATA_DRIVER driver1 = (DATA_DRIVER) a;
@@ -117,6 +177,34 @@ double get_cost_ride(DATA_RIDES ride, GHashTable* drivers){
 	else return -1;
 }
 
+int num_anos_perfil_user(DATA_USER user){
+	
+	struct tm date;
+
+	get_account_creation_user(user,&date);
+
+	int anos = YEA_CALC - date.tm_year-1900;
+	if(date.tm_mon > MON_CALC) anos--;
+	else if(date.tm_mon == MON_CALC && date.tm_mday > DAY_CALC) anos--;
+	
+	return anos;
+
+}
+
+
+int num_anos_perfil_driver(DATA_DRIVER driver){
+	
+	struct tm date;
+
+	get_account_creation_driver(driver,&date);
+
+	int anos = YEA_CALC - date.tm_year-1900;
+	if(date.tm_mon > MON_CALC) anos--;
+	else if(date.tm_mon == MON_CALC && date.tm_mday > DAY_CALC) anos--;
+	
+	return anos;
+
+}
 
 
 void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable *DB_drivers, GHashTable *DB_rides){
@@ -476,6 +564,89 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 				g_list_free(list_q7);
 				g_list_free(list_rides_q7);
 				g_hash_table_destroy(hash_table_q7);
+
+				break;
+
+			case 8:
+
+				char *gender_q8 = NULL;
+				int num_min_year_q8 = 0;
+				int gender_int = 0;
+
+				gender_q8 = strsep(&multi_arg," ");
+				gender_q8 = strsep(&multi_arg," ");
+
+				if(!strcmp(gender_q8,"M")) gender_int = 0;
+				else gender_int = 1;
+
+				num_min_year_q8 = atoi(strsep(&multi_arg," "));
+
+				GHashTableIter iterq8;
+				gpointer keyq8, valueq8;
+				g_hash_table_iter_init (&iterq8, DB_rides);
+
+				GList *list_q8 = NULL;
+
+				while(g_hash_table_iter_next(&iterq8, &keyq8, &valueq8)){
+					
+					DATA_USER user_to_check = g_hash_table_lookup(DB_users,GINT_TO_POINTER(get_username_rides(valueq8)));
+					DATA_DRIVER driver_to_check = g_hash_table_lookup(DB_drivers,GINT_TO_POINTER(get_id_driver_rides(valueq8)));
+
+					if(get_gender_user(user_to_check) == gender_int && get_gender_driver(driver_to_check) == gender_int && get_account_status_user(user_to_check) == 0 && get_account_status_driver(driver_to_check) == 0 && num_anos_perfil_user(user_to_check) >= num_min_year_q8 && num_anos_perfil_driver(driver_to_check) >= num_min_year_q8){
+
+						list_q8 = g_list_prepend(list_q8,valueq8);
+
+					}
+
+				}
+
+				GList *aux_list_q8 = list_q8;
+				GList *processed_list_q8 = NULL;
+
+				while(aux_list_q8){
+
+					AUX_STRUCT_Q8 cicle = malloc(sizeof(struct aux_struct_q8));
+
+					cicle->id_condutor = get_id_driver_rides(aux_list_q8->data);
+					cicle->nome_condutor = get_name_driver(g_hash_table_lookup(DB_drivers,GINT_TO_POINTER(cicle->id_condutor)));
+					cicle->username_utilizador = get_username_rides(aux_list_q8->data);
+					cicle->nome_utilizador = get_name_user(g_hash_table_lookup(DB_users,cicle->username_utilizador));
+					get_account_creation_driver(g_hash_table_lookup(DB_drivers,GINT_TO_POINTER(cicle->id_condutor)),&cicle->data_driver);
+					get_account_creation_user(g_hash_table_lookup(DB_users,cicle->username_utilizador),&cicle->data_user);
+					cicle->id_viagem = get_id_rides(aux_list_q8->data);
+
+					processed_list_q8 = g_list_prepend(processed_list_q8,cicle);
+
+					aux_list_q8 = aux_list_q8->next;
+
+				}
+
+				processed_list_q8 = g_list_sort(processed_list_q8,compare_q8);
+
+				GList *aux_processed_list_q8 = processed_list_q8;
+
+				while(aux_processed_list_q8){
+
+					AUX_STRUCT_Q8 aux_processed_list_q8_data = aux_processed_list_q8->data;
+
+					fprintf(output_file_pointer,"%012d;%s;%s;%s\n",aux_processed_list_q8_data->id_condutor,aux_processed_list_q8_data->nome_condutor,aux_processed_list_q8_data->username_utilizador,aux_processed_list_q8_data->nome_utilizador);
+
+					aux_processed_list_q8 = aux_processed_list_q8->next;
+
+				}
+
+				// GList *aux_list2_q8 = processed_list_q8;
+				// while(aux_list2_q8){
+
+				// 	free_aux_struct_q8(aux_list2_q8->data);
+				// 	aux_list2_q8 = aux_list2_q8->next;
+
+				// }
+
+
+				g_list_free(list_q8);
+				g_list_free(processed_list_q8);
+
 
 				break;
 
