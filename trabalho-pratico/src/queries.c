@@ -60,6 +60,7 @@ void free_aux_struct_q8(AUX_STRUCT_Q8 elem){
 #define YEA_CALC 2022
 
 // compare q8 by date of driver and return,or if equal, by date of user an return, or if equal, by id of ride
+
 gint compare_q8(gconstpointer a, gconstpointer b){
 	AUX_STRUCT_Q8 elem1 = (AUX_STRUCT_Q8) a;
 	AUX_STRUCT_Q8 elem2 = (AUX_STRUCT_Q8) b;
@@ -90,6 +91,56 @@ gint compare_q8(gconstpointer a, gconstpointer b){
 		}
 	}
 }
+
+//compare_q9 order by distance descending if equal most recent first if still equal order by id of ride descending
+gint compare_q9(gconstpointer a, gconstpointer b){
+
+	DATA_RIDES elem1 = (DATA_RIDES) a;
+	DATA_RIDES elem2 = (DATA_RIDES) b;
+
+	if(get_distance_rides(elem1) > get_distance_rides(elem2)){
+		return 1;
+	}
+	else if(get_distance_rides(elem1) < get_distance_rides(elem2)){
+		return -1;
+	}
+	else{
+
+
+		struct tm data1_q9;
+		get_date_rides(elem1,&data1_q9);
+		struct tm data2_q9;
+		get_date_rides(elem2,&data2_q9);
+
+		if(compare_tmdates(data1_q9,data2_q9) == 1){
+			return 1;
+		}
+
+		else if(compare_tmdates(data1_q9,data2_q9) == -1){
+
+			return -1;
+		}
+		else if(get_id_rides(elem1) > get_id_rides(elem2)){
+			
+				return 1;
+			
+			}
+			
+			else if(get_id_rides(elem1) < get_id_rides(elem2)){
+			
+				return -1;
+			
+			}
+			
+			else{
+			
+				return 0;
+			
+			}
+			
+		}
+	
+	}
 
 
 gint compare_drivers_orderby_score_id(gconstpointer a, gconstpointer b){
@@ -208,6 +259,23 @@ int num_anos_perfil_driver(DATA_DRIVER driver){
 }
 
 
+char *int_to_city(int x){
+
+	switch(x){
+
+		case 0: return "Lisboa";
+		case 1: return "Porto";
+		case 2: return "Faro";
+		case 3: return "Braga";
+		case 4: return "Setúbal";
+		default: return "NULL";
+
+	}
+
+
+}
+
+
 void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable *DB_drivers, GHashTable *DB_rides){
 
 	char *line=NULL;
@@ -217,6 +285,7 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 	ssize_t read;
 
 	while ((read = getline(&line, &len, commands_file_pointer)) != -1) {
+
 		// printf("Retrieved line nº %d of length %zu ===> ",i, read);
 		// printf("%s", line);
 
@@ -656,13 +725,75 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 
 				break;
 
+			case 9:
+
+				struct tm data_inicio_q9;
+				struct tm data_fim_q9;
+				char *dates_q9;
+
+				dates_q9 = strsep(&multi_arg, " ");
+				dates_q9 = strsep(&multi_arg, " ");
+
+				strptime(dates_q9,"%d/%m/%Y",&data_inicio_q9);
+				data_inicio_q9.tm_mon++;
+
+				// printf("DATA INICIO : %d/%d/%d",data_inicio_q9.tm_mday,data_inicio_q9.tm_mon,data_inicio_q9.tm_year);
+
+
+				dates_q9 = strsep(&multi_arg, " ");
+
+				strptime(dates_q9,"%d/%m/%Y",&data_fim_q9);
+				data_fim_q9.tm_mon++;
+
+				// printf("	DATA FIM : %d/%d/%d\n",data_fim_q9.tm_mday,data_fim_q9.tm_mon,data_fim_q9.tm_year);
+
+
+				GHashTableIter iterq9;
+				gpointer keyq9, valueq9;
+				g_hash_table_iter_init(&iterq9, DB_rides);
+
+				GList *list_q9=NULL;
+
+				struct tm data_viagem_q9;
+
+				while (g_hash_table_iter_next (&iterq9, &keyq9, &valueq9)) {
+
+					get_date_rides(valueq9,&data_viagem_q9);
+
+					if(compare_tmdates(data_viagem_q9,data_inicio_q9) >= 0 && compare_tmdates(data_viagem_q9,data_fim_q9) <= 0 && get_tip_rides(valueq9) > 0){
+
+						list_q9 = g_list_prepend(list_q9,valueq9);
+
+					}
+
+				}
+
+				list_q9 = g_list_sort(list_q9,compare_q9);
+				list_q9 = g_list_reverse(list_q9);
+				
+				GList *aux_list_q9 = list_q9;
+				struct tm aux_data_q9;
+
+				while(aux_list_q9){
+
+					get_date_rides(aux_list_q9->data,&aux_data_q9);
+
+					fprintf(output_file_pointer,"%012d;%02d/%02d/%d;%d;%s;%.3f\n",get_id_rides(aux_list_q9->data),aux_data_q9.tm_mday,aux_data_q9.tm_mon,aux_data_q9.tm_year+1900,get_distance_rides(aux_list_q9->data),int_to_city(get_city_rides(aux_list_q9->data)),get_tip_rides(aux_list_q9->data));
+					aux_list_q9 = aux_list_q9->next;
+
+				}
+
+				g_list_free(list_q9);
+
+				break;
+
 			default:
 				
-				// printf("\n");
+				printf("\n");
 				
-				// printf("Line Nº %d -> Invalid command!! ❌",i);
+				printf("Line Nº %d -> Invalid command!! ❌",i);
 				
-				// printf("\n");
+				printf("\n");
 
 				break;
 			
