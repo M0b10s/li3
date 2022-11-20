@@ -25,7 +25,7 @@ typedef struct data_driver{
 	int num_viagens;
 	int avaliacao_total;
 	double total_auferido_driver; 
-
+	struct tm data_ultima_ride_driver;
 
 
 }*DATA_DRIVER;
@@ -33,16 +33,30 @@ typedef struct data_driver{
 
 //===============================================Set's=====================================================
 
+void set_data_ultima_ride_driver(DATA_DRIVER driver,int day,int month,int year){
+
+	driver->data_ultima_ride_driver.tm_mday = day;
+	driver->data_ultima_ride_driver.tm_mon = month;
+	driver->data_ultima_ride_driver.tm_year = year;
+
+}
+
 void set_increment_num_viagens_driver(DATA_DRIVER driver){
+
 	driver->num_viagens = driver->num_viagens + 1;
+
 }
 
 void set_increment_total_avaliacao_driver(DATA_DRIVER driver,int avaliacao){
+
 	driver->avaliacao_total += avaliacao;
+
 }
 
 void set_increment_total_auferido_driver(DATA_DRIVER driver,double gasto){
+
 	driver->total_auferido_driver += gasto;
+
 }
 
 
@@ -130,6 +144,13 @@ double get_total_auferido_driver(DATA_DRIVER driver){
 
 }
 
+void get_data_ultima_ride_driver(DATA_DRIVER driver, struct tm *dest){
+
+	dest->tm_mday = driver->data_ultima_ride_driver.tm_mday;
+	dest->tm_mon = driver->data_ultima_ride_driver.tm_mon;
+	dest->tm_year = driver->data_ultima_ride_driver.tm_year;
+
+}
 
 
 //===============================================END Get's=====================================================
@@ -170,6 +191,7 @@ void print_driver(DATA_DRIVER driver){
 	printf("num_viagens : %d\n",driver->num_viagens);
 	printf("avaliacao_total : %d\n",driver->avaliacao_total);
 	printf("total_auferido_driver : %5.3f\n",driver->total_auferido_driver);
+	printf("Data ultima ride : %d/%d/%d\n",driver->data_ultima_ride_driver.tm_mday,driver->data_ultima_ride_driver.tm_mon,driver->data_ultima_ride_driver.tm_year+1900);
 	printf("\n");}
 
 }
@@ -191,6 +213,9 @@ DATA_DRIVER clone_driver(DATA_DRIVER driver){
 	clone->age = driver->age;
 	clone->num_viagens = 0;
 	clone->avaliacao_total = 0;
+	clone->data_ultima_ride_driver.tm_mday = driver->data_ultima_ride_driver.tm_mday;
+	clone->data_ultima_ride_driver.tm_mon = driver->data_ultima_ride_driver.tm_mon;
+	clone->data_ultima_ride_driver.tm_year = driver->data_ultima_ride_driver.tm_year;
 
 	return clone;
 }
@@ -350,6 +375,9 @@ DATA_DRIVER create_driver(char *drivers_line){
 			driver->total_auferido_driver = 0;
 			driver->birth_day.tm_mon += 1;
 			driver->account_creation.tm_mon += 1;
+			driver->data_ultima_ride_driver.tm_mday = 0;
+			driver->data_ultima_ride_driver.tm_mon = 0;
+			driver->data_ultima_ride_driver.tm_year = 0;
 
 			//AGE CALCULATION WITH DEFINE (DAY_CALC,MON_CALC,YEA_CALC) VALUES
 			int age = YEA_CALC - driver->birth_day.tm_year;

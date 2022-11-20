@@ -8,6 +8,7 @@
 #include <glib.h>
 #include "users.h"
 #include "drivers.h"
+#include "queries.h"
 
 typedef struct data_rides *DATA_RIDES;
 

@@ -178,6 +178,45 @@ gint compare_drivers_orderby_score_id(gconstpointer a, gconstpointer b){
 
 }
 
+gint compare_drivers_orderby_score(gconstpointer a, gconstpointer b){
+
+	DATA_DRIVER driver1 = (DATA_DRIVER) a;
+	DATA_DRIVER driver2 = (DATA_DRIVER) b;
+
+	int non_div_zero_a = 0;
+	int non_div_zero_b = 0;
+	if(get_num_viagens_driver(driver1) == 0) non_div_zero_a = 1;
+	if(get_num_viagens_driver(driver2) == 0) non_div_zero_b = 1;
+
+	if((double)get_avaliacao_total_driver(driver1)/(double)get_num_viagens_driver(driver1)+non_div_zero_a > (double)get_avaliacao_total_driver(driver2)/(double)get_num_viagens_driver(driver2)+non_div_zero_b)
+	
+		return -1;
+	
+	else if((double)get_avaliacao_total_driver(driver1)/(double)get_num_viagens_driver(driver1)+non_div_zero_a < (double)get_avaliacao_total_driver(driver2)/(double)get_num_viagens_driver(driver2)+non_div_zero_b)
+	
+		return 1;
+	
+	else return 0;
+
+}
+
+gint compare_users_orderby_distance(gconstpointer a, gconstpointer b){
+
+	DATA_USER user1 = (DATA_USER) a;
+	DATA_USER user2 = (DATA_USER) b;
+
+	if(get_distancia_viajada_user(user1) > get_distancia_viajada_user(user2))
+	
+		return -1;
+	
+	else if(get_distancia_viajada_user(user1) < get_distancia_viajada_user(user2))
+	
+		return 1;
+	
+	else return 0;
+
+}
+
 int compare_tmdates(struct tm date1, struct tm date2){
 
 	if(date1.tm_year > date2.tm_year)
@@ -275,6 +314,17 @@ char *int_to_city(int x){
 
 }
 
+void swap_elements_glist(GList* list, int i, int j){
+
+	GList* elem1 = g_list_nth(list,i);
+	GList* elem2 = g_list_nth(list,j);
+
+	gpointer aux = elem1->data;
+	elem1->data = elem2->data;
+	elem2->data = aux;
+
+}
+
 
 void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable *DB_drivers, GHashTable *DB_rides){
 
@@ -348,26 +398,158 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 				strsep(&multi_arg, "\n ");
 				strtok(multi_arg, "\n");
 
-				GList *list = g_hash_table_get_values(DB_drivers);
-				list = g_list_sort(list,compare_drivers_orderby_score_id);
-				int n = atoi(multi_arg);
-				int counter_q2 = 0;
-				char *name_driver=NULL;
-				while(counter_q2<n){
-					name_driver = get_name_driver(g_list_nth_data(list,counter_q2));
-					if(!get_account_status_driver(g_list_nth_data(list,counter_q2)))
-					fprintf(output_file_pointer,"%012d;%s;%.3f\n",get_id_driver(g_list_nth_data(list,i)),name_driver,(double)get_avaliacao_total_driver(g_list_nth_data(list,i))/(double)get_num_viagens_driver(g_list_nth_data(list,i)));
-					counter_q2++;
-					free(name_driver);
+				guint n_q2 = atoi(multi_arg);
+
+				GList *list_q2 = g_hash_table_get_values(DB_drivers);
+				list_q2 = g_list_sort(list_q2,compare_drivers_orderby_score);
+
+				//iter over list and remove drivers with account status = 1
+				GList *iter_q2 = list_q2;
+				while(iter_q2 != NULL){
+
+					if(get_account_status_driver(iter_q2->data)){
+						GList *aux = iter_q2;
+						iter_q2 = iter_q2->next;
+						list_q2 = g_list_delete_link(list_q2,aux);
+					}
+
+					else iter_q2 = iter_q2->next;
+
 				}
 
-				g_list_free(list);
+
+				gpointer to_free_q2=NULL;
+
+				if(n_q2<g_list_length(list_q2)) to_free_q2 = g_list_nth(list_q2,n_q2);
+
+				if(n_q2<g_list_length(list_q2)) g_list_nth(list_q2,n_q2-1)->next = NULL;
+
+				
+				GList *swaper = list_q2;
+				int counter_q2=0;
+				while(swaper->next != NULL){
+
+					DATA_DRIVER driver1 = swaper->data;
+					DATA_DRIVER driver2 = swaper->next->data;
+
+					struct tm date_user_1;
+					struct tm date_user_2;
+
+					get_data_ultima_ride_driver(driver1,&date_user_1);
+					get_data_ultima_ride_driver(driver2,&date_user_2);
+
+					int non_div_zero_q2_driver1=0;
+					int non_div_zero_q2_driver2=0;
+
+					if(get_num_viagens_driver(driver1) == 0) non_div_zero_q2_driver1=1;
+					if(get_num_viagens_driver(driver2) == 0) non_div_zero_q2_driver2=1;
+
+					if((double)get_avaliacao_total_driver(driver1)/(double)get_num_viagens_driver(driver1)+non_div_zero_q2_driver1 == (double)get_avaliacao_total_driver(driver2)/(double)get_num_viagens_driver(driver2)+non_div_zero_q2_driver2 && compare_tmdates(date_user_1,date_user_2) == -1){
+
+						swap_elements_glist(list_q2,counter_q2,counter_q2+1);
+
+					}
+
+					counter_q2++;
+					swaper = swaper->next;
+
+				}
+
+
+				GList *aux_q2 = list_q2;
+				while(aux_q2 != NULL){
+
+					DATA_DRIVER driver = aux_q2->data;
+					char *name_driver = get_name_driver(driver);
+					int non_div_zero=0;
+					if(get_num_viagens_driver(driver) == 0) non_div_zero=1;
+					fprintf(output_file_pointer,"%012d;%s;%.3f\n",get_id_driver(driver),name_driver,((double)get_avaliacao_total_driver(driver)/(double)get_num_viagens_driver(driver)+(double)non_div_zero));
+					free(name_driver);
+					aux_q2 = aux_q2->next;
+
+				}
+
+				g_list_free(list_q2);
+				if(to_free_q2)g_list_free(to_free_q2);
 
 				break;
 
 			case 3:
+
 				strsep(&multi_arg, "\n ");
 				strtok(multi_arg, "\n");
+
+				guint n_q3 = atoi(multi_arg);
+
+				GList *list_q3 = g_hash_table_get_values(DB_users);
+				list_q3 = g_list_sort(list_q3,compare_users_orderby_distance);
+
+				//iter over list and remove users with account status = 1
+				GList *iter_q3 = list_q3;
+				while(iter_q3 != NULL){
+
+					if(get_account_status_user(iter_q3->data)){
+						GList *aux = iter_q3;
+						iter_q3 = iter_q3->next;
+						list_q3 = g_list_delete_link(list_q3,aux);
+					}
+
+					else iter_q3 = iter_q3->next;
+
+				}
+
+				gpointer to_free_q3=NULL;
+
+				if(n_q3<g_list_length(list_q3)) to_free_q3 = g_list_nth(list_q3,n_q3);
+
+				if(n_q3<g_list_length(list_q3)) g_list_nth(list_q3,n_q3-1)->next = NULL;
+
+				GList *swaper_q3 = list_q3;
+				int counter_q3=0;
+				while(swaper_q3->next != NULL){
+
+					DATA_USER user1 = swaper_q3->data;
+					DATA_USER user2 = swaper_q3->next->data;
+
+					struct tm date_user_1;
+					struct tm date_user_2;
+
+					get_data_ultima_ride_user(user1,&date_user_1);
+					get_data_ultima_ride_user(user2,&date_user_2);
+
+					// if the distance is the same, iter over the rides and check the date of the last ride
+
+					if(get_distancia_viajada_user(user1) == get_distancia_viajada_user(user2) && compare_tmdates(date_user_1,date_user_2) == -1){
+
+						swap_elements_glist(list_q3,counter_q3,counter_q3+1);
+
+					}
+
+					counter_q3++;
+					swaper_q3 = swaper_q3->next;
+
+				}
+
+
+
+				GList *aux_q3 = list_q3;
+				while(aux_q3 != NULL){
+
+					DATA_USER user_q2 = aux_q3->data;
+					char *name_user_string_q2 = get_name_user(user_q2);
+					char *username_string_q2 = get_username(user_q2);
+
+					fprintf(output_file_pointer,"%s;%s;%d\n",username_string_q2,name_user_string_q2,get_distancia_viajada_user(user_q2));
+					
+					free(name_user_string_q2);
+					free(username_string_q2);
+					aux_q3 = aux_q3->next;
+
+				}
+
+				g_list_free(list_q3);
+				if(to_free_q3)g_list_free(to_free_q3);
+
 				break;
 
 			case 4:

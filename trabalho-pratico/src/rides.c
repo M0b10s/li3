@@ -156,6 +156,7 @@ void go_stats_rides(DATA_RIDES *ride, GHashTable *users, GHashTable *drivers){
 			}
 
 	}
+	
 	free(username);
 
 }
@@ -272,6 +273,29 @@ DATA_RIDES create_rides(char *rides_line,GHashTable *users, GHashTable *drivers)
 	free(token);
 
 	if (ride) go_stats_rides(&ride,users,drivers);
+
+	if(ride){
+
+		char *username = get_username_rides(ride);
+
+		DATA_USER user_to_check = g_hash_table_lookup(users,username);
+		DATA_DRIVER driver_to_check = g_hash_table_lookup(drivers,GINT_TO_POINTER(ride->id_driver));
+
+		struct tm date_user;
+		struct tm date_driver;
+
+		get_data_ultima_ride_user(user_to_check,&date_user);
+		get_data_ultima_ride_driver(driver_to_check,&date_driver);
+
+			if(compare_tmdates(date_user,ride->date) == -1)
+				set_data_ultima_ride_user(user_to_check,ride->date.tm_mday,ride->date.tm_mon,ride->date.tm_year);
+			
+			if(compare_tmdates(date_driver,ride->date) == -1)
+				set_data_ultima_ride_driver(driver_to_check,ride->date.tm_mday,ride->date.tm_mon,ride->date.tm_year);
+
+		free(username);
+
+	}
 
 	return ride;
 

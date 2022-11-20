@@ -23,9 +23,10 @@ int get_age_driver(DATA_DRIVER driver);
 int get_num_viagens_driver(DATA_DRIVER driver);
 int get_avaliacao_total_driver(DATA_DRIVER driver);
 double get_total_auferido_driver(DATA_DRIVER driver);
+void get_data_ultima_ride_driver(DATA_DRIVER driver, struct tm *dest);
 
 
-
+void set_data_ultima_ride_driver(DATA_DRIVER driver,int day,int month,int year);
 void set_increment_num_viagens_driver(DATA_DRIVER driver);
 void set_increment_total_avaliacao_driver(DATA_DRIVER driver,int avaliacao);
 void set_increment_total_auferido_driver(DATA_DRIVER driver,double gasto);

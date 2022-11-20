@@ -22,10 +22,19 @@ typedef struct data_user{
 	int distancia_viajada;
 	int total_avaliacao;
 	double total_gasto;
+	struct tm data_ultima_ride_user;
 	
 }*DATA_USER;
 
 //===============================================Set's=====================================================
+
+void set_data_ultima_ride_user(DATA_USER user,int day,int month,int year){
+
+	user->data_ultima_ride_user.tm_mday=day;
+	user->data_ultima_ride_user.tm_mon=month;
+	user->data_ultima_ride_user.tm_year=year;
+
+}
 
 void set_increment_num_viagens_user(DATA_USER user){
 	
@@ -34,15 +43,21 @@ void set_increment_num_viagens_user(DATA_USER user){
 }
 
 void set_increment_distancia_viajada_user(DATA_USER user,double distancia){
+
 	user->distancia_viajada += distancia;
+
 }
 
 void set_increment_total_avaliacao_user(DATA_USER user,double avaliacao){
+
 	user->total_avaliacao += avaliacao;
+
 }
 
 void set_increment_total_gasto_user(DATA_USER user,double gasto){
+
 	user->total_gasto += gasto;
+
 }
 
 //===============================================Get's=====================================================
@@ -123,6 +138,15 @@ double get_total_gasto_user(DATA_USER user){
 
 }
 
+void get_data_ultima_ride_user(DATA_USER user,struct tm *dest){
+
+	dest->tm_mday = user->data_ultima_ride_user.tm_mday;
+	dest->tm_mon = user->data_ultima_ride_user.tm_mon;
+	dest->tm_year = user->data_ultima_ride_user.tm_year;
+
+}
+
+
 //===============================================END Get's=====================================================
 
 void free_user(DATA_USER user){
@@ -155,6 +179,7 @@ void print_user(DATA_USER user){
         	printf("distancia_viajada: %d\n",user->distancia_viajada);
         	printf("total_avaliacao: %d\n",user->total_avaliacao);
         	printf("total_gasto: %5.3f\n",user->total_gasto);
+        	printf("Data ultima ride: %d/%d/%d\n",user->data_ultima_ride_user.tm_mday,user->data_ultima_ride_user.tm_mon,user->data_ultima_ride_user.tm_year+1900);
        		printf("\n");
     }
 
@@ -181,6 +206,10 @@ DATA_USER clone_user(DATA_USER user){
 	clone->distancia_viajada = user->distancia_viajada;
 	clone->total_avaliacao = user->total_avaliacao;
 	clone->total_gasto = user->total_gasto;
+	clone->data_ultima_ride_user.tm_mday = user->data_ultima_ride_user.tm_mday;
+	clone->data_ultima_ride_user.tm_mon = user->data_ultima_ride_user.tm_mon;
+	clone->data_ultima_ride_user.tm_year = user->data_ultima_ride_user.tm_year;
+
 
 	return clone;
 
@@ -296,6 +325,9 @@ DATA_USER create_user(char *users_line){
 			user->total_gasto = 0.0;
 			user->birth_date.tm_mon += 1;
 			user->account_creation.tm_mon += 1;
+			user->data_ultima_ride_user.tm_mday = 0;
+			user->data_ultima_ride_user.tm_mon = 0;
+			user->data_ultima_ride_user.tm_year = 0;
 
 			//AGE CALCULATION WITH DEFINE (DAY_CALC,MON_CALC,YEA_CALC) VALUES
 			int idade = YEA_CALC - user->birth_date.tm_year;

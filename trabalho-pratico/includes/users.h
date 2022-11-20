@@ -26,7 +26,7 @@ int get_num_viagens_user(DATA_USER user);
 int get_distancia_viajada_user(DATA_USER user);
 int get_total_avaliacao_user(DATA_USER user);
 double get_total_gasto_user(DATA_USER user);
-
+void get_data_ultima_ride_user(DATA_USER user,struct tm *dest);
 
 
 //=======================================================================================================================================
@@ -34,6 +34,7 @@ double get_total_gasto_user(DATA_USER user);
 
 //=========================================================SETTERS=======================================================================
 
+void set_data_ultima_ride_user(DATA_USER user,int day,int month,int year);
 void set_increment_num_viagens_user(DATA_USER user);
 void set_increment_distancia_viajada_user(DATA_USER user,double distancia);
 void set_increment_total_avaliacao_user(DATA_USER user,double avaliacao);
