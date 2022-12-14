@@ -317,23 +317,25 @@ DATA_USER create_user(char *users_line){
 			// if (tm.tm_mon < user->birth_date.tm_mon || (tm.tm_mon == user->birth_date.tm_mon && tm.tm_mday < user->birth_date.tm_mday))
 			// 	idade--;
 			// user->idade = idade;
+			if(user){
+				//INITIALIZE OTHER VALUES
+				user->num_viagens = 0;
+				user->distancia_viajada = 0;
+				user->total_avaliacao = 0;
+				user->total_gasto = 0.0;
+				user->birth_date.tm_mon += 1;
+				user->account_creation.tm_mon += 1;
+				user->data_ultima_ride_user.tm_mday = 0;
+				user->data_ultima_ride_user.tm_mon = 0;
+				user->data_ultima_ride_user.tm_year = 0;
 
-			//INITIALIZE OTHER VALUES
-			user->num_viagens = 0;
-			user->distancia_viajada = 0;
-			user->total_avaliacao = 0;
-			user->total_gasto = 0.0;
-			user->birth_date.tm_mon += 1;
-			user->account_creation.tm_mon += 1;
-			user->data_ultima_ride_user.tm_mday = 0;
-			user->data_ultima_ride_user.tm_mon = 0;
-			user->data_ultima_ride_user.tm_year = 0;
-
-			//AGE CALCULATION WITH DEFINE (DAY_CALC,MON_CALC,YEA_CALC) VALUES
-			int idade = YEA_CALC - user->birth_date.tm_year;
-			if (MON_CALC < user->birth_date.tm_mon || (MON_CALC == user->birth_date.tm_mon && DAY_CALC < user->birth_date.tm_mday))
-				idade--;
-			user->idade = idade-1900;
+				//AGE CALCULATION WITH DEFINE (DAY_CALC,MON_CALC,YEA_CALC) VALUES
+				int idade = YEA_CALC - user->birth_date.tm_year;
+				if (MON_CALC < user->birth_date.tm_mon || (MON_CALC == user->birth_date.tm_mon && DAY_CALC < user->birth_date.tm_mday))
+					idade--;
+				user->idade = idade-1900;
+			}
+			
 
 		free(token);
 
