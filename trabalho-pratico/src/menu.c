@@ -1,6 +1,8 @@
 #include <menu.h>
 
 #define NUM_ELEM 10
+int num_ele = NUM_ELEM;
+
 
 void repeat (char c , int count )
 {
@@ -122,6 +124,8 @@ int count_number_lines_in_file(FILE *file){
 
 	while(getline(&line,&len, aux) != -1) count++;
 
+	free(line);
+
 	return count;	
 }
 
@@ -202,29 +206,29 @@ void print_file(file input){
 
 }
 
-int number_of_results_in_query(FILE *fp){
+// int number_of_results_in_query(FILE *fp){
 
-	int count = 0;
-	char *line=NULL;
-	size_t len = 0;
-	FILE *aux = fp;
+// 	int count = 0;
+// 	char *line=NULL;
+// 	size_t len = 0;
+// 	FILE *aux = fp;
 
-	getline(&line, &len, aux);
+// 	getline(&line, &len, aux);
 
-	while(line != NULL){
+// 	while(line != NULL){
 
-		strsep(&line, ";");
-		count++;
+// 		strsep(&line, ";");
+// 		count++;
 
-	}
+// 	}
 
-	free(line);
+// 	free(line);
 
-	return count;
+// 	return count;
 
-}
+// }
 
-void print_result_on_screen(int size_of_window, int columns,int file_index){
+void print_result_on_screen(int size_of_window,int file_index){
 
 	char c='n';   
    static struct termios oldt, newt;
@@ -247,18 +251,18 @@ void print_result_on_screen(int size_of_window, int columns,int file_index){
    
    tcsetattr( STDIN_FILENO, TCSANOW, &newt);
 
-   int low_ind=1,high_ind=NUM_ELEM;
+   int low_ind=1,high_ind=num_ele;
 
    while(toupper(c=getchar()) != 'Q'){
 
    	if(toupper(c) == 'N' && high_ind < lines_in_file){
-   		low_ind+=NUM_ELEM;
-   		high_ind+=NUM_ELEM;
+   		low_ind+=num_ele;
+   		high_ind+=num_ele;
    	}
 
    	if(toupper(c) == 'P' && low_ind > 1){
-   		low_ind-=NUM_ELEM;
-   		high_ind-=NUM_ELEM;
+   		low_ind-=num_ele;
+   		high_ind-=num_ele;
    	}
 
 

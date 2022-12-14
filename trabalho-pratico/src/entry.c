@@ -219,15 +219,15 @@ int main(int argc, char const *argv[])
 
 					FILE *fp = fopen(ficheiro_resultado,"r");
 
-					print_result_on_screen(size,number_of_results_in_query(fp),valid_run_index);
+					print_result_on_screen(size,valid_run_index);
 
 					printf("\n");
 					wait_for_enter_v2();
 			
 				free(interactive_command);
 				fclose(interactive_command_file_pointer);
-				fclose(fp);
 				free(ficheiro_resultado);
+				fclose(fp);
 			
 			}
 

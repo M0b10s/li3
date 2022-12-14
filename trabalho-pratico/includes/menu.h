@@ -28,8 +28,8 @@ file do_queries(int *valid_run);
 void free_file(file input);
 void file_stand_print(file input);
 void fill_file (file input,char *name);
-void print_result_on_screen(int size_of_window, int columns,int file_index);
-int number_of_results_in_query(FILE *fp);
+void print_result_on_screen(int size_of_window,int file_index);
+// int number_of_results_in_query(FILE *fp);
 void wait_for_enter();
 void wait_for_enter_v2();
 

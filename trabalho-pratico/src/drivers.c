@@ -259,8 +259,8 @@ DATA_DRIVER create_driver(char *drivers_line){
         	case 0:
 
         		if (!atoi(token)) flag=1;
-					driver->id = atoi(token);
-        		
+							driver->id = atoi(token);
+
         		break;
 
         	case 1:
@@ -289,6 +289,10 @@ DATA_DRIVER create_driver(char *drivers_line){
 				break;
 
 			case 4:
+
+				char *aux = token;
+
+				for ( ; *aux; ++aux) *aux = tolower(*aux);
 
 				if (!strcmp(token,"basic"))
 					driver->car_class = basic;

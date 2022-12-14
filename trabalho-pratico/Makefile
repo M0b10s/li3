@@ -11,7 +11,7 @@ WARN_STRING=$(WARN_COLOR)problems$(NO_COLOR)
 #------------------------------------------------------------------------------
 CC      = gcc
 LD      = gcc
-CFLAGS  = -O2 -Wall -std=gnu99 -Wextra
+CFLAGS  = -O2 -Wall -std=gnu99 -Wextra -ggdb3
 CFLAGS += -Wno-unused-parameter -Wno-unused-function -Wno-unused-result
 LIBS    = `pkg-config --cflags --libs glib-2.0`
 INCLDS  = -I $(INC_DIR)
