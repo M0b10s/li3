@@ -326,7 +326,7 @@ void swap_elements_glist(GList* list, int i, int j){
 }
 
 
-void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable *DB_drivers, GHashTable *DB_rides){
+void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable *DB_drivers, GHashTable *DB_rides,int interctive_mode_index){
 
 	char *line=NULL;
 	char *output_file_name=malloc(1000*sizeof(char));
@@ -334,13 +334,14 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 	size_t len = 0;
 	ssize_t read;
 
-	while ((read = getline(&line, &len, commands_file_pointer)) != -1) {
+	while ((read = getline(&line, &len, commands_file_pointer)) != -1){
 
 		// printf("Retrieved line nº %d of length %zu ===> ",i, read);
 		// printf("%s", line);
 
 		//process command
-		sprintf(output_file_name,"%s%d%s","Resultados/command",i,"_output.txt");
+		if(interctive_mode_index) sprintf(output_file_name,"%s%d%s","Resultados/command_interactive_",interctive_mode_index,"_output.txt");
+		else sprintf(output_file_name,"%s%d%s","Resultados/command",i,"_output.txt");
 		
 		FILE *output_file_pointer = fopen(output_file_name,"w+");
 

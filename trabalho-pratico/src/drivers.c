@@ -370,21 +370,22 @@ DATA_DRIVER create_driver(char *drivers_line){
 			// driver->age = age;
 
 			//INITIALIZE OTHER VALUES
-			driver->num_viagens = 0;
-			driver->avaliacao_total = 0;
-			driver->total_auferido_driver = 0;
-			driver->birth_day.tm_mon += 1;
-			driver->account_creation.tm_mon += 1;
-			driver->data_ultima_ride_driver.tm_mday = 0;
-			driver->data_ultima_ride_driver.tm_mon = 0;
-			driver->data_ultima_ride_driver.tm_year = 0;
+			if(driver){
+				driver->num_viagens = 0;
+				driver->avaliacao_total = 0;
+				driver->total_auferido_driver = 0;
+				driver->birth_day.tm_mon += 1;
+				driver->account_creation.tm_mon += 1;
+				driver->data_ultima_ride_driver.tm_mday = 0;
+				driver->data_ultima_ride_driver.tm_mon = 0;
+				driver->data_ultima_ride_driver.tm_year = 0;
 
-			//AGE CALCULATION WITH DEFINE (DAY_CALC,MON_CALC,YEA_CALC) VALUES
-			int age = YEA_CALC - driver->birth_day.tm_year;
-			if (MON_CALC < driver->birth_day.tm_mon || (MON_CALC == driver->birth_day.tm_mon && DAY_CALC < driver->birth_day.tm_mday))
-				age--;
-			driver->age = age-1900;
-
+				//AGE CALCULATION WITH DEFINE (DAY_CALC,MON_CALC,YEA_CALC) VALUES
+				int age = YEA_CALC - driver->birth_day.tm_year;
+				if (MON_CALC < driver->birth_day.tm_mon || (MON_CALC == driver->birth_day.tm_mon && DAY_CALC < driver->birth_day.tm_mday))
+					age--;
+				driver->age = age-1900;
+			}
 
 		free(token);
 
