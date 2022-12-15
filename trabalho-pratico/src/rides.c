@@ -1,6 +1,6 @@
 #include <rides.h>
 
-enum city{Lisboa,Porto,Faro,Braga,Setubal};
+enum city{Lisboa,Porto,Faro,Braga,Setubal,Vila,Coimbra};
 
 #define BASIC_RIDE 3.25
 #define GREEN_RIDE 4.00
@@ -217,6 +217,10 @@ DATA_RIDES create_rides(char *rides_line,GHashTable *users, GHashTable *drivers)
 				else if(!strcmp(token,"Faro")) ride->city = Faro;
 				else if(!strcmp(token,"Braga")) ride->city = Braga;
 				else if(!strcmp(token,"Setúbal")) ride->city = Setubal;
+				else if(!strcmp(token,"Vila real")) ride->city = Vila;
+				else if(!strcmp(token,"Coimbra")) ride->city = Coimbra;
+				else flag=1;
+
 				break;
 
 			case 5: 

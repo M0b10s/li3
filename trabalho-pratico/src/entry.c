@@ -188,16 +188,18 @@ int main(int argc, char const *argv[])
 
 		while(menuop[0] != 'Q' && menuop[0] != 'q'){
 
+			int req_made = -1;
+
 			menu_principal(size,size_lines);
 			
 			scanf(" %s", menuop);
 
 			if (strlen(menuop) > 1) menuop[0] = 'F'; //control invalid input in main menu
 
-			file result = input_level_1(menuop[0],&valid_run_index,list_inputs,size);
+			file result = input_level_1(menuop[0],&valid_run_index,list_inputs,size,&req_made);
 
 
-			if (result) {
+			if (result && req_made < 0) {
 			
 					list_inputs = g_list_prepend(list_inputs,result);
 
@@ -219,7 +221,7 @@ int main(int argc, char const *argv[])
 
 					FILE *fp = fopen(ficheiro_resultado,"r");
 
-					print_result_on_screen(size,valid_run_index);
+					print_result_on_screen(size,valid_run_index-1);
 
 					printf("\n");
 					wait_for_enter_v2();
@@ -229,6 +231,25 @@ int main(int argc, char const *argv[])
 				free(ficheiro_resultado);
 				fclose(fp);
 			
+			}
+
+			//------------------------------------------------------------------------------------------------------------------------------------
+			
+			else if(toupper(menuop[0]) == 'C'){
+
+
+				if(valid_run_index > req_made){
+					print_result_on_screen(size,req_made);
+					printf("\n");
+					wait_for_enter_v2();
+				}
+				
+				else {
+					printCenter("Invalid request number!!",size);
+					printf("\n");
+					wait_for_enter();
+				}
+
 			}
 
 		
@@ -245,7 +266,7 @@ int main(int argc, char const *argv[])
 
 	}
 
-	//-----------------------------------------------------------------------------------------------------------------------------
+	//-----------------------------------------DEBUG-------------------------------------------------------------------------------
 
 	// DATA_DRIVER driver = g_hash_table_lookup(datab_drivers,(gpointer)3308); //check values for x driver WORKING RIGHT
 	// print_driver(driver);

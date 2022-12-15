@@ -135,55 +135,55 @@ void file_stand_print(file input){
 	
 		case 1:
 	
-			printf("1 %s\n",input->arg1);
+			printf("Request Number %d : 1 \t\t%s\n",input->n_request,input->arg1);
 	
 			break;
 	
 		case 2:
 
-			printf("2 %s\n",input->arg1);
+			printf("Request Number %d : 2 \t\t%s\n",input->n_request,input->arg1);
 
 			break;
 
 		case 3:
 
-			printf("3 %s\n",input->arg1);
+			printf("Request Number %d : 3 \t\t%s\n",input->n_request,input->arg1);
 
 			break;
 
 		case 4:
 
-			printf("4 %s\n",input->arg1);
+			printf("Request Number %d : 4 \t\t%s\n",input->n_request,input->arg1);
 
 			break;
 
 		case 5:
 
-			printf("5 %s %s\n",input->arg1,input->arg2);
+			printf("Request Number %d : 5 \t\t%s \t\t%s\n",input->n_request,input->arg1,input->arg2);
 
 			break;
 
 		case 6:
 
-			printf("6 %s %s %s\n",input->arg1,input->arg2,input->arg3);
+			printf("Request Number %d : 6 \t\t%s \t\t%s \t\t%s\n",input->n_request,input->arg1,input->arg2,input->arg3);
 
 			break;
 
 		case 7:
 
-			printf("7 %s %s\n",input->arg1,input->arg2);
+			printf("Request Number %d : 7 \t\t%s \t\t%s\n",input->n_request,input->arg1,input->arg2);
 
 			break;
 
 		case 8:
 
-			printf("8 %s %s\n",input->arg1,input->arg2);
+			printf("Request Number %d : 8 \t\t%s \t\t%s\n",input->n_request,input->arg1,input->arg2);
 
 			break;
 
 		case 9:
 
-			printf("9 %s %s\n",input->arg1,input->arg2);
+			printf("Request Number %d : 9 \t\t%s \t\t%s\n",input->n_request,input->arg1,input->arg2);
 
 			break;
 
@@ -239,7 +239,7 @@ void print_result_on_screen(int size_of_window,int file_index){
 
    
    FILE *fp=NULL;
-	sprintf(inspect_file,"%s%d%s","Resultados/command_interactive_",file_index-1,"_output.txt");
+	sprintf(inspect_file,"%s%d%s","Resultados/command_interactive_",file_index,"_output.txt");
    fp = fopen(inspect_file, "r");
 
    int lines_in_file = count_number_lines_in_file(fp);
@@ -295,7 +295,7 @@ file confirm_request(int querie,char *arg1,char *arg2,char *arg3,int *valid_run)
 
 			if(querie == 1 || querie == 2 || querie == 3 || querie == 4){
 		
-				printf("Confirma a Query? (Y/N): ");
+				printf("Confirma a Query? (Y/Other): ");
 				printf("%d %s\n",querie,arg1);
 				scanf(" %s",aux);
 		
@@ -303,7 +303,7 @@ file confirm_request(int querie,char *arg1,char *arg2,char *arg3,int *valid_run)
 
 			else if(querie == 5 || querie == 7 || querie == 8 || querie == 9){
 		
-				printf("Confirma a Query? (Y/N): ");
+				printf("Confirma a Query? (Y/Other): ");
 				printf("%d %s %s\n",querie,arg1,arg2);
 				scanf(" %s",aux);
 		
@@ -311,7 +311,7 @@ file confirm_request(int querie,char *arg1,char *arg2,char *arg3,int *valid_run)
 
 			else if(querie == 6){
 		
-				printf("Confirma a Query? (Y/N): ");
+				printf("Confirma a Query? (Y/Other): ");
 				printf("%d %s %s %s\n",querie,arg1,arg2,arg3);
 				scanf(" %s",aux);
 		
@@ -364,8 +364,9 @@ void menu_principal(unsigned int size,unsigned int size_lines){
 	repeat('=',size);
 
 		printCenter("R - Realizar uma Query (1/9)",size);
-		printCenter("C - Consultar Último Resultado Gerado",size);
+		printCenter("C - Consultar um Resultado Gerado",size);
 		printCenter("L - Log de Pedidos",size);
+		printCenter("D - Def de Elementos Paginados",size);
 		printCenter("Q - Quit Program",size);
 
 	repeat('=',size);
@@ -374,7 +375,7 @@ void menu_principal(unsigned int size,unsigned int size_lines){
 
 }
 
-file input_level_1(char x,int *valid_run,GList *list_inputs,int size){
+file input_level_1(char x,int *valid_run,GList *list_inputs,int size,int *req_made){
 
 	switch(toupper(x)){
 		case 'R':
@@ -384,22 +385,42 @@ file input_level_1(char x,int *valid_run,GList *list_inputs,int size){
 
 			break;
 		case 'C':
-			printf("C\n");
+
+			char req[100];
+			printf("Insira o numero do pedido: ");
+			scanf(" %s",req);
+
+			if (atoi(req) > 0) *req_made = atoi(req);
+
 			break;
+
 		case 'L':
 
 			//iterate list and print all files
+			repeat('=',size);
+			printCenter("LOG DE PEDIDOS",size);
+			repeat('=',size);
 			while(list_inputs != NULL){
 				file_stand_print(list_inputs->data);
 				list_inputs = list_inputs->next;
 			}
-
+			repeat('=',size);
+			printf("\n");
 			wait_for_enter();
 
 			break;
+
 		case 'Q':
 			printf("Leaving the Program!\n");
 			break;
+
+		case 'D':
+
+			printf("Numero de Elementos por Página:");
+			scanf(" %d", &num_ele);
+
+			break;
+
 		default:
 
 			printf("Invalid Input\n");
@@ -473,6 +494,10 @@ file do_queries(int *valid_run){
 			
 			get_arg_city(arg1);
 
+			char *aux_4 = arg1;
+			for ( ; *aux_4; ++aux_4) *aux_4 = tolower(*aux_4);
+			arg1[0] = toupper(arg1[0]);
+
 			file try4 = confirm_request(4,arg1,NULL,NULL,valid_run);
 
 			if(!try4) cancel_query();
@@ -497,6 +522,11 @@ file do_queries(int *valid_run){
 		case 6:
 			
 			get_arg_city(arg1);
+
+			char *aux_6 = arg1;
+			for ( ; *aux_6; ++aux_6) *aux_6 = tolower(*aux_6);
+			arg1[0] = toupper(arg1[0]);
+
 			get_arg_date_inic(arg2);
 			get_arg_date_end(arg3);
 
@@ -512,6 +542,10 @@ file do_queries(int *valid_run){
 			
 			get_arg_n(arg1);
 			get_arg_city(arg2);
+
+			char *aux_7 = arg2;
+			for ( ; *aux_7; ++aux_7) *aux_7 = tolower(*aux_7);
+			arg2[0] = toupper(arg2[0]);
 
 			file try7 =  confirm_request(7,arg1,arg2,NULL,valid_run);
 

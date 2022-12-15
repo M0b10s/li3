@@ -6,7 +6,7 @@
 
 enum gender{M,F};
 enum car_calss{basic,green,premium};
-enum city{Lisboa,Porto,Faro,Braga,Setubal};
+enum city{Lisboa,Porto,Faro,Braga,Setubal,Vila,Coimbra};
 enum account_status{active,inactive};
 
 
@@ -323,6 +323,10 @@ DATA_DRIVER create_driver(char *drivers_line){
 					driver->city = Braga;
 				else if (!strcmp(token,"Setúbal"))
 					driver->city = Setubal;
+				else if (!strcmp(token,"Vila real"))
+					driver->city = Vila;
+				else if (!strcmp(token,"Coimbra"))
+					driver->city = Coimbra;
 				else
 					flag = 1;
 				break;

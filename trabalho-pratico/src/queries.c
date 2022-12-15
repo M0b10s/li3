@@ -564,6 +564,10 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 				else if(!strcmp(city,"Faro")) city_int = 2;
 				else if(!strcmp(city,"Braga")) city_int = 3;
 				else if(!strcmp(city,"Setúbal")) city_int = 4;
+				else if(!strcmp(city,"Vila real")) city_int = 5;
+				else if(!strcmp(city,"Coimbra")) city_int = 6;
+				else city_int=-1;
+
 
 
 				GHashTableIter iter;
@@ -680,6 +684,10 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 				else if(!strcmp(city_q6,"Faro")) city_int_q6 = 2;
 				else if(!strcmp(city_q6,"Braga")) city_int_q6 = 3;
 				else if(!strcmp(city_q6,"Setúbal")) city_int_q6 = 4;
+				else if(!strcmp(city_q6,"Vila real")) city_int_q6 = 5;
+				else if(!strcmp(city_q6,"Coimbra")) city_int_q6 = 6;
+				else city_int_q6=-1;
+
 
 			
 				GList *list_rides_q6 = NULL;
@@ -736,6 +744,9 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 				else if(!strcmp(city_q7,"Faro")) city_int_q7 = 2;
 				else if(!strcmp(city_q7,"Braga")) city_int_q7 = 3;
 				else if(!strcmp(city_q7,"Setúbal")) city_int_q7 = 4;
+				else if(!strcmp(city_q7,"Vila real")) city_int_q7 = 5;
+				else if(!strcmp(city_q7,"Coimbra")) city_int_q7 = 6;
+				else city_int_q7=-1;
 
 
 				GHashTableIter iterq7;

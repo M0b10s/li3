@@ -23,7 +23,7 @@ typedef struct file{
 //=======================================================================================================================================
 
 void menu_principal(unsigned int size,unsigned int size_lines);
-file input_level_1(char x,int *valid_run,GList *list_inputs,int size);
+file input_level_1(char x,int *valid_run,GList *list_inputs,int size,int *req_made);
 file do_queries(int *valid_run);
 void free_file(file input);
 void file_stand_print(file input);
