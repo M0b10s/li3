@@ -364,8 +364,7 @@ DATA_DRIVER create_driver(char *drivers_line){
 		}
 
 
-			if(flag == 1 || i<9){
-				printf("ERROR IN DRIVER DATA!!!\n");
+			if(flag == 1 || i<8){
 				driver = NULL;
 			}
         	
