@@ -86,6 +86,7 @@ int main(int argc, char const *argv[])
 
 	//=============================================================================================================================
 	//===================================================File Handling=============================================================
+	
 	char *aux_user_path = malloc(strlen("/users.txt")+1000);
 	char *aux_drivers_path = malloc(strlen("/drivers.txt")+1000);
 	char *aux_rides_path = malloc(strlen("/rides.txt")+1000);
