@@ -306,7 +306,6 @@ DATA_USER create_user(char *users_line){
 
 			
 			if(flag == 1 || i<6){
-				printf("ERROR IN USER DATA!!!\n");
 				user = NULL;
 			}
 			
