@@ -181,79 +181,121 @@ DATA_RIDES create_rides(char *rides_line,GHashTable *users, GHashTable *drivers)
 
 			case 0: 
 				
-				if(!atoi(token)) flag=1;
-				ride->id = atoi(token);
+				if(token){
+
+					if(!atoi(token)) flag=1;
+					ride->id = atoi(token);
+				
+				}
+
+				else flag=1;
 				
 				break;
 			
 			case 1:
 
-				if(strptime(token,"%d/%m/%Y",&ride->date)==NULL) flag=1;
+				if(token){
+
+					if(strptime(token,"%d/%m/%Y",&ride->date)==NULL) flag=1;
 				
+				}
+
+				else flag=1;
+
 				break;
 
 			case 2:
 
-				if(!atoi(token)) flag=1;
-				
-				else{
+				if(token){
 
-					ride->id_driver = atoi(token);
+					if(!atoi(token)) flag=1;
+					
+					else ride->id_driver = atoi(token);
 
 				}
+
+				else flag=1;
 
 				break;
 			
 			case 3:
 
-				ride->username = strdup(token);
+				if(token)	ride->username = strdup(token);
+
+				else flag=1;
 
 				break;
 			
 			case 4:
 
-				if(!strcmp(token,"Lisboa")) ride->city = Lisboa;
-				else if(!strcmp(token,"Porto")) ride->city = Porto;
-				else if(!strcmp(token,"Faro")) ride->city = Faro;
-				else if(!strcmp(token,"Braga")) ride->city = Braga;
-				else if(!strcmp(token,"Setúbal")) ride->city = Setubal;
-				else if(!strcmp(token,"Vila real")) ride->city = Vila;
-				else if(!strcmp(token,"Coimbra")) ride->city = Coimbra;
+				if(token){
+
+					if(!strcmp(token,"Lisboa")) ride->city = Lisboa;
+					else if(!strcmp(token,"Porto")) ride->city = Porto;
+					else if(!strcmp(token,"Faro")) ride->city = Faro;
+					else if(!strcmp(token,"Braga")) ride->city = Braga;
+					else if(!strcmp(token,"Setúbal")) ride->city = Setubal;
+					else if(!strcmp(token,"Vila real")) ride->city = Vila;
+					else if(!strcmp(token,"Coimbra")) ride->city = Coimbra;
+					else flag=1;
+				
+				}
+
 				else flag=1;
 
 				break;
 
 			case 5: 
 				
-				if(!atoi(token)) flag=1;
-				ride->distance = atoi(token);
+				if(token){
+					if(!atoi(token)) flag=1;
+					ride->distance = atoi(token);
+				}
+
+				else flag=1;
 
 				break;
 
 			case 6:
 
-				if(!atoi(token)) flag=1;
-				ride->score_user = atoi(token);
+				if(token){
+					if(!atoi(token)) flag=1;
+					ride->score_user = atoi(token);
+				}
+
+				else flag=1;
 
 				break;
 
 			case 7:
 
-				if(!atoi(token)) flag=1;
-				ride->score_driver = atoi(token);
+				if(token){
+					if(!atoi(token)) flag=1;
+					ride->score_driver = atoi(token);
+				}
+
+				else flag=1;
 
 				break;
 			
 			case 8:
 
-				if(!atof(token)) flag=1;
-				ride->tip = atof(token);
+				if(token){
+					if(!atof(token)) flag=1;
+					ride->tip = atof(token);
+				}
+
+				else flag=1;
 
 				break;
 			
 			case 9:
 
-				ride->comment = strdup(token);
+				if(token){
+					ride->comment = strdup(token);
+				}
+
+				else flag=1;
 
 				break;
 

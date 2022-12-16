@@ -258,37 +258,57 @@ DATA_DRIVER create_driver(char *drivers_line){
 
         	case 0:
 
-        		if (!atoi(token)) flag=1;
-							driver->id = atoi(token);
+        		if(token){
+	        	
+	        		if (!atoi(token)) flag=1;
+								driver->id = atoi(token);
+        		
+        		}
+
+        		else flag=1;
 
         		break;
 
         	case 1:
 
-        		driver->name = strdup(token);
-        		
+        		if(token) driver->name = strdup(token);
+        		else flag=1;
+
         		break;
 
         	case 2:
 
-        		if (strptime(token,"%d/%m/%Y",&driver->birth_day) == NULL)
-        		flag = 1;
+        		if(token){
+	        	
+	        		if (strptime(token,"%d/%m/%Y",&driver->birth_day) == NULL)
+	        		flag = 1;
+	        	
+	        	}
+
+	        	else flag=1;
 
 				break;
 
 			case 3:
 
-				if (!strcmp(token,"M"))
-					driver->gender = M;
-				else if (!strcmp(token,"F"))
-					driver->gender = F;
-				else
-					flag = 1;
-				break;
+				if(token){
+				
+					if (!strcmp(token,"M"))
+						driver->gender = M;
+					else if (!strcmp(token,"F"))
+						driver->gender = F;
+					else
+						flag = 1;
+				
+				}
+
+				else flag=1;
 
 				break;
 
 			case 4:
+
+				if(token){
 
 				char *aux = token;
 
@@ -303,51 +323,70 @@ DATA_DRIVER create_driver(char *drivers_line){
 				else 
 					flag = 1;
 
+				}
+
+				else flag=1;
+
 				break;
 
 			case 5:
 
-				driver->license_plate = strdup(token);
+				if(token) driver->license_plate = strdup(token);
+				else flag=1;
 
 				break;
 
 			case 6:
 
-				if (!strcmp(token,"Lisboa"))
-					driver->city = Lisboa;
-				else if (!strcmp(token,"Porto"))
-					driver->city = Porto;
-				else if (!strcmp(token,"Faro"))
-					driver->city = Faro;
-				else if (!strcmp(token,"Braga"))
-					driver->city = Braga;
-				else if (!strcmp(token,"Setúbal"))
-					driver->city = Setubal;
-				else if (!strcmp(token,"Vila real"))
-					driver->city = Vila;
-				else if (!strcmp(token,"Coimbra"))
-					driver->city = Coimbra;
-				else
-					flag = 1;
+				if(token){
+
+					if (!strcmp(token,"Lisboa"))
+						driver->city = Lisboa;
+					else if (!strcmp(token,"Porto"))
+						driver->city = Porto;
+					else if (!strcmp(token,"Faro"))
+						driver->city = Faro;
+					else if (!strcmp(token,"Braga"))
+						driver->city = Braga;
+					else if (!strcmp(token,"Setúbal"))
+						driver->city = Setubal;
+					else if (!strcmp(token,"Vila real"))
+						driver->city = Vila;
+					else if (!strcmp(token,"Coimbra"))
+						driver->city = Coimbra;
+					else
+						flag = 1;
+				}
+
+				else flag=1;
+
 				break;
 
 			case 7:
 
-				if (strptime(token,"%d/%m/%Y",&driver->account_creation) == NULL)
-				flag = 1;
+				if(token){
+					if (strptime(token,"%d/%m/%Y",&driver->account_creation) == NULL)
+					flag = 1;
+				}
+
+				else flag=1;
 
 				break;
 
 			case 8:
 
-				if (!strcmp(token,"active"))
-					driver->account_status = active;
-				else if (!strcmp(token,"inactive"))
-					driver->account_status = inactive;
-				else
-					flag = 1;
+				if (token){
+					
+					if (!strcmp(token,"active"))
+						driver->account_status = active;
+					else if (!strcmp(token,"inactive"))
+						driver->account_status = inactive;
+					else
+						flag = 1;
+					}
 
-			
+					else flag = 1;
+
 				break;
 			
 
@@ -364,7 +403,7 @@ DATA_DRIVER create_driver(char *drivers_line){
 		}
 
 
-			if(flag == 1 || i<8){
+			if(flag == 1){
 				driver = NULL;
 			}
         	

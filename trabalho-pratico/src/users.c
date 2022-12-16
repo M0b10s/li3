@@ -232,63 +232,94 @@ DATA_USER create_user(char *users_line){
 		while ((token = strtok_r(rest, ";\n", &rest))){
         
 
-        switch(i){
+      switch(i){
 
-        	case 0:
+      
+      case 0:
 
-				user->username = strdup(token);
-				
+				if (token) user->username = strdup(token);
+				else flag = 1;
+
 				break;
 			
 			case 1:
 				
-				user->name = strdup(token);
+				if (token) user->name = strdup(token);
+				else flag = 1;
 
 				break;
 			
 			case 2:
 
-				if (!strcmp(token,"M"))
-					user->gender = M;
-				else if (!strcmp(token,"F"))
-					user->gender = F;
-				else
-					flag = 1;
+				if(token){
+					if (!strcmp(token,"M"))
+						user->gender = M;
+					else if (!strcmp(token,"F"))
+						user->gender = F;
+					else
+						flag = 1;
+				}
+
+				else flag = 1;
+
 				break;
 
 			case 3:
 
+				if(token){
+
 				if (strptime(token,"%d/%m/%Y",&user->birth_date) == NULL)
 					flag = 1;
+				}
+
+				else flag = 1;
+
 				break;
 			
 			case 4:
-			
+				
+				if(token){
+				
 				if (strptime(token,"%d/%m/%Y",&user->account_creation) == NULL)
 					flag = 1;
+				}
+				
+				else flag = 1;
+
 				break;
 			
 			case 5:
+
+				if(token){
 			
-				if (!strcmp(token,"cash"))
-					user->pay_method = cash;
-				else if (!strcmp(token,"credit_card"))
-					user->pay_method = credit_card;
-				else if (!strcmp(token,"debit_card"))
-					user->pay_method = debit_card;
-				else
-					flag = 1;
-				
+					if (!strcmp(token,"cash"))
+						user->pay_method = cash;
+					else if (!strcmp(token,"credit_card"))
+						user->pay_method = credit_card;
+					else if (!strcmp(token,"debit_card"))
+						user->pay_method = debit_card;
+					else
+						flag = 1;
+				}
+
+				else flag = 1;
+
 				break;
 			
 			case 6:
-			
-				if (!strcmp(token,"active"))
-					user->account_status = active;
-				else if (!strcmp(token,"inactive"))
-					user->account_status = inactive;
-				else
-					flag = 1;
+				
+				if (token){
+					
+					if (!strcmp(token,"active"))
+						user->account_status = active;
+					else if (!strcmp(token,"inactive"))
+						user->account_status = inactive;
+					else
+						flag = 1;
+					}
+
+					else flag = 1;
+
 				break;
 			
 			
@@ -305,7 +336,7 @@ DATA_USER create_user(char *users_line){
 		}
 
 			
-			if(flag == 1 || i<6){
+			if(flag == 1){
 				user = NULL;
 			}
 			

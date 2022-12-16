@@ -307,6 +307,8 @@ char *int_to_city(int x){
 		case 2: return "Faro";
 		case 3: return "Braga";
 		case 4: return "Setúbal";
+		case 5: return "Vila real";
+		case 6: return "Coimbra";
 		default: return "NULL";
 
 	}
@@ -587,7 +589,8 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 				int nz = 0;
 				if(total_rides == 0) nz=1;
 				double average_cost = (double)total_cost/(double)total_rides+(double)nz;
-				fprintf(output_file_pointer,"%.3f\n",average_cost);
+				
+				if(city_int!=-1) fprintf(output_file_pointer,"%.3f\n",average_cost);
 
 				break;
 

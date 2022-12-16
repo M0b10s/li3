@@ -12,7 +12,7 @@ WARN_STRING=$(WARN_COLOR)problems$(NO_COLOR)
 # cflags dedug -O0 -ggdb3
 CC      = gcc
 LD      = gcc
-CFLAGS  = -O2 -Wall -std=gnu99 -Wextra
+CFLAGS  = -O2 -Wall -std=gnu99 -ggdb3 -Wextra  
 CFLAGS += -Wno-unused-parameter -Wno-unused-function -Wno-unused-result
 LIBS    = `pkg-config --cflags --libs glib-2.0`
 INCLDS  = -I $(INC_DIR)
