@@ -369,7 +369,7 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 						int non_div_zero=0;
 						char *name_user = get_name_user(user);
 										if(get_gender_user(user) == 0) aux = 'M'; else aux = 'F';
-										if(get_num_viagens_user(user) == 0) non_div_zero=1;
+										if(get_num_viagens_user(user) == 0) break;
 										fprintf(output_file_pointer,"%s;%c;%d;%.3f;%d;%.3f\n",name_user,aux,get_idade_user(user),((double)get_total_avaliacao_user(user)/(double)get_num_viagens_user(user)+(double)non_div_zero),get_num_viagens_user(user),get_total_gasto_user(user));
 						free(name_user);
 					}
@@ -387,7 +387,7 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 						char *name_driver = get_name_driver(driver);
 
 										if(get_gender_driver(driver) == 0) aux = 'M'; else aux = 'F';
-										if(get_num_viagens_driver(driver) == 0) non_div_zero=1;
+										if(get_num_viagens_driver(driver) == 0) break;
 										fprintf(output_file_pointer,"%s;%c;%d;%.3f;%d;%.3f\n",name_driver,aux,get_age_driver(driver),((double)get_avaliacao_total_driver(driver)/(double)get_num_viagens_driver(driver)+(double)non_div_zero),get_num_viagens_driver(driver),get_total_auferido_driver(driver));
 						free(name_driver);
 					}

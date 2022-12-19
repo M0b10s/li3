@@ -248,7 +248,7 @@ DATA_RIDES create_rides(char *rides_line,GHashTable *users, GHashTable *drivers)
 			case 5: 
 				
 				if(token){
-					if(!atoi(token) && atoi(token) <= 0) flag=1;
+					if(!atoi(token) || atoi(token) <= 0 || isnan(atof(token))) flag=1;
 					ride->distance = atoi(token);
 				}
 
@@ -266,7 +266,7 @@ DATA_RIDES create_rides(char *rides_line,GHashTable *users, GHashTable *drivers)
 
 				for ( ; *aux; ++aux) if(*aux == ',') flag=1;
 
-					if(!atof(token) && atof(token) <= 0) flag=1;
+					if(!atof(token) || atof(token) <= 0 || isnan(atof(token))) flag=1;
 					ride->score_user = atof(token);
 				
 				}
@@ -284,7 +284,7 @@ DATA_RIDES create_rides(char *rides_line,GHashTable *users, GHashTable *drivers)
 
 				for ( ; *aux; ++aux) if(*aux == ',') flag=1;
 
-					if(!atof(token) && atof(token) <= 0) flag=1;
+					if(!atof(token) || atof(token) <= 0 || isnan(atof(token))) flag=1;
 					ride->score_driver = atof(token);
 				}
 
@@ -296,12 +296,12 @@ DATA_RIDES create_rides(char *rides_line,GHashTable *users, GHashTable *drivers)
 
 				if(token){
 
-					
+
 				char *aux = token;
 
 				for ( ; *aux; ++aux) if(*aux == ',') flag=1;
 
-					if(!atof(token) && atof(token) <= 0) flag=1;
+					if(!atof(token) || atof(token) <= 0 || isnan(atof(token))) flag=1;
 					ride->tip = atof(token);
 				}
 
