@@ -251,7 +251,8 @@ DATA_USER create_user(char *users_line){
 			
 			case 2:
 
-				if(token){
+				if(token && strlen(token) == 1){
+					*token = toupper(*token);
 					if (!strcmp(token,"M"))
 						user->gender = M;
 					else if (!strcmp(token,"F"))
@@ -309,6 +310,10 @@ DATA_USER create_user(char *users_line){
 			case 6:
 				
 				if (token){
+
+					char *aux = token;
+
+					for ( ; *aux; ++aux) *aux = tolower(*aux);
 					
 					if (!strcmp(token,"active"))
 						user->account_status = active;

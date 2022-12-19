@@ -377,6 +377,10 @@ DATA_DRIVER create_driver(char *drivers_line){
 
 				if (token){
 					
+					char *aux = token;
+
+					for ( ; *aux; ++aux) *aux = tolower(*aux);
+					
 					if (!strcmp(token,"active"))
 						driver->account_status = active;
 					else if (!strcmp(token,"inactive"))

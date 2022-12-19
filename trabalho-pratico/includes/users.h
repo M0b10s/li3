@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <glib.h>
+#include <ctype.h>
 
 
 typedef struct data_user *DATA_USER;

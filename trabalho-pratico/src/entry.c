@@ -86,7 +86,7 @@ int main(int argc, char const *argv[])
 
 	//=============================================================================================================================
 	//===================================================File Handling=============================================================
-	
+
 	char *aux_user_path = malloc(strlen("/users.txt")+1000);
 	char *aux_drivers_path = malloc(strlen("/drivers.txt")+1000);
 	char *aux_rides_path = malloc(strlen("/rides.txt")+1000);
@@ -106,15 +106,15 @@ int main(int argc, char const *argv[])
 
 	char *users_file_pointer_string = malloc(strlen("users.csv")+1000);
 	strcpy(users_file_pointer_string,aux_user_path);
-	strcat(users_file_pointer_string,"/users.csv");
+	strcat(users_file_pointer_string,"/users_errb.csv");
 
 	char *drivers_file_pointer_string = malloc(strlen("drivers.csv")+1000);
 	strcpy(drivers_file_pointer_string,aux_drivers_path);
-	strcat(drivers_file_pointer_string,"/drivers.csv");
+	strcat(drivers_file_pointer_string,"/drivers_errb.csv");
 
 	char *rides_file_pointer_string = malloc(strlen("rides.csv")+1000);
 	strcpy(rides_file_pointer_string,aux_rides_path);
-	strcat(rides_file_pointer_string,"/rides.csv");
+	strcat(rides_file_pointer_string,"/rides_errb.csv");
 
 
 	FILE *users_file_pointer = fopen(users_file_pointer_string,"r");

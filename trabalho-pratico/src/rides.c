@@ -18,8 +18,8 @@ typedef struct data_rides{
 	char *username;
 	enum city city;
 	int distance;
-	int score_user;
-	int score_driver;
+	double score_user;
+	double score_driver;
 	double tip;
 	char *comment;
 
@@ -114,8 +114,8 @@ void print_rides(DATA_RIDES ride){
 	printf("Username: %s\n",ride->username);
 	printf("City: %d\n",ride->city);
 	printf("Distance: %d\n",ride->distance);
-	printf("Score User: %d\n",ride->score_user);
-	printf("Score Driver: %d\n",ride->score_driver);
+	printf("Score User: %f\n",ride->score_user);
+	printf("Score Driver: %f\n",ride->score_driver);
 	printf("Tip: %f\n",ride->tip);
 	printf("Comment: %s\n",ride->comment);
 
@@ -248,7 +248,7 @@ DATA_RIDES create_rides(char *rides_line,GHashTable *users, GHashTable *drivers)
 			case 5: 
 				
 				if(token){
-					if(!atoi(token)) flag=1;
+					if(!atoi(token) && atoi(token) <= 0) flag=1;
 					ride->distance = atoi(token);
 				}
 
@@ -258,9 +258,17 @@ DATA_RIDES create_rides(char *rides_line,GHashTable *users, GHashTable *drivers)
 
 			case 6:
 
+
 				if(token){
-					if(!atoi(token)) flag=1;
-					ride->score_user = atoi(token);
+
+
+				char *aux = token;
+
+				for ( ; *aux; ++aux) if(*aux == ',') flag=1;
+
+					if(!atof(token) && atof(token) <= 0) flag=1;
+					ride->score_user = atof(token);
+				
 				}
 
 				else flag=1;
@@ -270,8 +278,14 @@ DATA_RIDES create_rides(char *rides_line,GHashTable *users, GHashTable *drivers)
 			case 7:
 
 				if(token){
-					if(!atoi(token)) flag=1;
-					ride->score_driver = atoi(token);
+
+
+				char *aux = token;
+
+				for ( ; *aux; ++aux) if(*aux == ',') flag=1;
+
+					if(!atof(token) && atof(token) <= 0) flag=1;
+					ride->score_driver = atof(token);
 				}
 
 				else flag=1;
@@ -281,7 +295,13 @@ DATA_RIDES create_rides(char *rides_line,GHashTable *users, GHashTable *drivers)
 			case 8:
 
 				if(token){
-					if(!atof(token)) flag=1;
+
+					
+				char *aux = token;
+
+				for ( ; *aux; ++aux) if(*aux == ',') flag=1;
+
+					if(!atof(token) && atof(token) <= 0) flag=1;
 					ride->tip = atof(token);
 				}
 
@@ -294,8 +314,6 @@ DATA_RIDES create_rides(char *rides_line,GHashTable *users, GHashTable *drivers)
 				if(token){
 					ride->comment = strdup(token);
 				}
-
-				else flag=1;
 
 				break;
 
