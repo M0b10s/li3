@@ -403,6 +403,8 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 
 				guint n_q2 = atoi(multi_arg);
 
+				if (n_q2 == 0) break;
+
 				GList *list_q2 = g_hash_table_get_values(DB_drivers);
 				list_q2 = g_list_sort(list_q2,compare_drivers_orderby_score);
 
@@ -483,6 +485,8 @@ void start_queries(FILE *commands_file_pointer, GHashTable *DB_users, GHashTable
 				strtok(multi_arg, "\n");
 
 				guint n_q3 = atoi(multi_arg);
+
+				if (n_q3 == 0) break;
 
 				GList *list_q3 = g_hash_table_get_values(DB_users);
 				list_q3 = g_list_sort(list_q3,compare_users_orderby_distance);

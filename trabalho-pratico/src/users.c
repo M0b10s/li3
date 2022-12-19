@@ -19,8 +19,8 @@ typedef struct data_user{
 	enum account_status account_status;
 	int idade;
 	int num_viagens;
-	int distancia_viajada;
-	int total_avaliacao;
+	double distancia_viajada;
+	double total_avaliacao;
 	double total_gasto;
 	struct tm data_ultima_ride_user;
 	
@@ -176,8 +176,8 @@ void print_user(DATA_USER user){
         	printf("account_status: %d\n",get_account_status_user(user));
         	printf("idade: %d\n",user->idade);
         	printf("num_viagens: %d\n",user->num_viagens);
-        	printf("distancia_viajada: %d\n",user->distancia_viajada);
-        	printf("total_avaliacao: %d\n",user->total_avaliacao);
+        	printf("distancia_viajada: %f\n",user->distancia_viajada);
+        	printf("total_avaliacao: %f\n",user->total_avaliacao);
         	printf("total_gasto: %5.3f\n",user->total_gasto);
         	printf("Data ultima ride: %d/%d/%d\n",user->data_ultima_ride_user.tm_mday,user->data_ultima_ride_user.tm_mon,user->data_ultima_ride_user.tm_year+1900);
        		printf("\n");

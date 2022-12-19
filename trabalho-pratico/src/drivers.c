@@ -23,7 +23,7 @@ typedef struct data_driver{
 	enum account_status account_status;
 	int age;
 	int num_viagens;
-	int avaliacao_total;
+	double avaliacao_total;
 	double total_auferido_driver; 
 	struct tm data_ultima_ride_driver;
 
@@ -189,7 +189,7 @@ void print_driver(DATA_DRIVER driver){
 	printf("account_status : %d\n",driver->account_status);
 	printf("age : %d\n",driver->age);
 	printf("num_viagens : %d\n",driver->num_viagens);
-	printf("avaliacao_total : %d\n",driver->avaliacao_total);
+	printf("avaliacao_total : %f\n",driver->avaliacao_total);
 	printf("total_auferido_driver : %5.3f\n",driver->total_auferido_driver);
 	printf("Data ultima ride : %d/%d/%d\n",driver->data_ultima_ride_driver.tm_mday,driver->data_ultima_ride_driver.tm_mon,driver->data_ultima_ride_driver.tm_year+1900);
 	printf("\n");}
