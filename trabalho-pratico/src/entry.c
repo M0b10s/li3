@@ -106,15 +106,15 @@ int main(int argc, char const *argv[])
 
 	char *users_file_pointer_string = malloc(strlen("users.csv")+1000);
 	strcpy(users_file_pointer_string,aux_user_path);
-	strcat(users_file_pointer_string,"/users_errb.csv");
+	strcat(users_file_pointer_string,"/users.csv");
 
 	char *drivers_file_pointer_string = malloc(strlen("drivers.csv")+1000);
 	strcpy(drivers_file_pointer_string,aux_drivers_path);
-	strcat(drivers_file_pointer_string,"/drivers_errb.csv");
+	strcat(drivers_file_pointer_string,"/drivers.csv");
 
 	char *rides_file_pointer_string = malloc(strlen("rides.csv")+1000);
 	strcpy(rides_file_pointer_string,aux_rides_path);
-	strcat(rides_file_pointer_string,"/rides_errb.csv");
+	strcat(rides_file_pointer_string,"/rides.csv");
 
 
 	FILE *users_file_pointer = fopen(users_file_pointer_string,"r");
